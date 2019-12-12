@@ -1,5 +1,6 @@
 package com.bitcamp.myproject;
 
+import java.sql.Date;
 import java.util.Scanner;
 
 public class App3 {
@@ -7,25 +8,23 @@ public class App3 {
     Scanner keyboard = new Scanner(System.in);
     
     System.out.print("번호? ");
-    String no = keyboard.nextLine();
+    int no = Integer.parseInt(keyboard.nextLine());
     
     System.out.print("내용? ");
-    String summary = keyboard.nextLine();
+    String text = keyboard.nextLine();
     
-    System.out.print("작성일? ");
-    String writeDate = keyboard.nextLine();
+    keyboard.close();
     
-    System.out.print("조회수? ");
-    String hit = keyboard.nextLine();
+    Date today = new Date(System.currentTimeMillis());
+    
+    int count = 0;
     
     System.out.println();
     
     System.out.printf("번호: %s\n", no);
-    System.out.printf("내용: %s\n", summary);
-    System.out.printf("작성일: %s\n", writeDate);
-    System.out.printf("조회수: %s\n", hit);
-    
-    keyboard.close();
+    System.out.printf("내용: %s\n", text);
+    System.out.printf("작성일: %s\n", today);
+    System.out.printf("조회수: %s\n", count);
   }
 }
 
