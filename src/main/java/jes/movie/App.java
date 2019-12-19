@@ -7,62 +7,71 @@ import java.util.Scanner;
 public class App {
   public static void main(String[] args) {
     Scanner keyboard = new Scanner(System.in);
-    int[] no = new int[100];
-    String[] movieTitle = new String[100];
-    String[] genre = new String[100];
-    String[] summary = new String[100];
-    String[] director = new String[100];
-    String[] actor = new String[100];
-    String[] kmrb = new String[100];
-    Date[] openDate = new Date[100];
-    int[] runningTime = new int[100];
-    
-    int count = 0;
+    class Info {
+      int no;
+      String movieTitle;
+      String genre;
+      String summary;
+      String director;
+      String actor;
+      String kmrb;
+      Date openDate;
+      int runningTime;
+    }
 
-    for (int i = 0; i < 100; i++) {
+    int SIZE = 100;
+    int count = 0;
+    Info[] infos = new Info[SIZE];
+
+    for (int i = 0; i < SIZE; i++) {
+      Info info = new Info();// Info info는 for문 안에서만 존재하지만 new Info() 메모리는 계속 존재한다.
+      count++;
+
       System.out.print("번호? ");
-      no[i] = keyboard.nextInt();
+      info.no = keyboard.nextInt();
 
       keyboard.nextLine();
 
       System.out.print("영화명? ");
-      movieTitle[i] = keyboard.nextLine();
+      info.movieTitle = keyboard.nextLine();
 
       System.out.print("장르? ");
-      genre[i] = keyboard.nextLine();
+      info.genre = keyboard.nextLine();
 
       System.out.print("줄거리? ");
-      summary[i] = keyboard.nextLine();
+      info.summary = keyboard.nextLine();
 
       System.out.print("감독? ");
-      director[i] = keyboard.nextLine();
+      info.director = keyboard.nextLine();
 
       System.out.print("출연? ");
-      actor[i] = keyboard.nextLine();
+      info.actor = keyboard.nextLine();
 
       System.out.print("관람등급? ");
-      kmrb[i] = keyboard.nextLine();
+      info.kmrb = keyboard.nextLine();
 
       System.out.print("개봉일? ");
-      openDate[i] = Date.valueOf(keyboard.nextLine());
+      info.openDate = Date.valueOf(keyboard.nextLine());
 
       System.out.print("러닝타임? ");
-      runningTime[i] = keyboard.nextInt();
+      info.runningTime = keyboard.nextInt();
       keyboard.nextLine();
-      count++;
+      infos[i] = info;
 
       System.out.print("계속 입력하시겠습니까?(Y/n)");
-      String answer = keyboard.nextLine();
-      if (!answer.equalsIgnoreCase("y")) {
+      String response = keyboard.nextLine();
+
+      if (!response.equalsIgnoreCase("y")) {
         break;
       }
     }
     keyboard.close();
     System.out.println();
     for (int i = 0; i < count; i++) {
-      System.out.printf("%d, %s, %s, %s, %s, %s, %s, %d분\n", 
-          no[i], genre[i], summary[i], director[i], actor[i], kmrb[i], 
-          openDate[i], runningTime[i]);
+      Info info = infos[i];
+      System.out.printf("%d, %s, %s, %s, %s, %s, %s, %s, %d분\n", info.no, info.movieTitle,
+          info.genre, info.summary, info.director, info.actor, info.kmrb, info.openDate,
+          info.runningTime);
     }
   }
 }

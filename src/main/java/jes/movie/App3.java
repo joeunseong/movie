@@ -6,27 +6,34 @@ import java.util.Scanner;
 public class App3 {
   public static void main(String[] args) {
     Scanner keyboard = new Scanner(System.in);
-    int[] no = new int[100];
-    String[] movieTitle = new String[100];
-    String[] reviewSummary = new String[100];
-    Date[] updateDay = new Date[100];
-    int[] viewCount = new int[100];
+    class Review {
+      int no;
+      String movieTitle;
+      String reviewSummary;
+      Date updateDay;
+      int viewCount;
+    }
+    
+    int SIZE = 100;
     int count = 0;
+    Review[] reviews = new Review[SIZE]; 
+    for (int i = 0; i < SIZE; i++) {
+      Review review = new Review();
 
-    for (int i = 0; i < 100; i++) {
       System.out.print("번호? ");
-      no[i] = Integer.parseInt(keyboard.nextLine());
+      review.no = Integer.parseInt(keyboard.nextLine());
 
       System.out.print("영화 제목?");
-      movieTitle[i] = keyboard.nextLine();
+      review.movieTitle = keyboard.nextLine();
 
       System.out.print("내용? ");
-      reviewSummary[i] = keyboard.nextLine();
+      review.reviewSummary = keyboard.nextLine();
 
-      updateDay[i] = new Date(System.currentTimeMillis());
-      viewCount[i] = 0;
-
+      Date today = new Date(System.currentTimeMillis());
+      review.updateDay = today;
+      reviews[i] = review;
       count++;
+      
       System.out.print("계속 등록하시겠습니까?(Y/n)");
       String answer = keyboard.nextLine();
       if (!answer.equalsIgnoreCase("y")) {
@@ -37,8 +44,9 @@ public class App3 {
 
     System.out.println();
     for (int i = 0; i < count; i++) {
-      System.out.printf("%d, %s, %s, %s, %d\n", 
-          no[i], movieTitle[i], reviewSummary[i], updateDay[i], viewCount[i] );
+      Review review = reviews[i];
+      System.out.printf("%d, %s, %s, %s\n",
+          review.no, review.movieTitle, review.reviewSummary, review.updateDay);
     }
   }
 }
