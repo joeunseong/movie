@@ -2,6 +2,9 @@
 package jes.movie;
 
 import java.util.Scanner;
+import jes.movie.handler.InfoHandler;
+import jes.movie.handler.MemberHandler;
+import jes.movie.handler.ReviewHandler;
 
 public class App {
   static Scanner keyboard = new Scanner(System.in);

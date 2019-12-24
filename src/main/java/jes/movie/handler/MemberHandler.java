@@ -1,26 +1,17 @@
-package jes.movie;
+package jes.movie.handler;
 
 import java.sql.Date;
 import java.util.Scanner;
+import jes.movie.domain.Member;
 
 public class MemberHandler {
-  static class Member {
-    int no;
-    String name;
-    String email;
-    String password;
-    String photo;
-    String tel;
-    Date registerDate;
-
-  }
-  
+   
   static final int MEMBER_SIZE = 100;
   static int memberCount = 0;
   static Member[] members = new Member[MEMBER_SIZE];
-  static Scanner keyboard;
+  public static Scanner keyboard;
   
-  static void addMember() {
+  public static void addMember() {
     Member member = new Member();
 
     System.out.print("번호? ");
@@ -48,7 +39,7 @@ public class MemberHandler {
 
   }
   
-  static void listMember() {
+  public static void listMember() {
     for (int i = 0; i < memberCount; i++) {
       Member m = members[i];
       System.out.printf("%d, %s, %s, %s, %s\n", 

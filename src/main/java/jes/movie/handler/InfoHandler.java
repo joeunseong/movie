@@ -1,28 +1,17 @@
-package jes.movie;
+package jes.movie.handler;
 
 import java.sql.Date;
 import java.util.Scanner;
+import jes.movie.domain.Info;
 
 public class InfoHandler {
 
-  static class Info {
-    int no;
-    String movieTitle;
-    String genre;
-    String summary;
-    String director;
-    String actor;
-    String kmrb;
-    Date openDate;
-    int runningTime;
-  }
-  
   static final int INFO_SIZE = 100;
   static int infoCount = 0;
   static Info[] infos = new Info[INFO_SIZE];
-  static Scanner keyboard;
+  public static Scanner keyboard;
   
-  static void addInfo() {
+  public static void addInfo() {
     Info info = new Info();
 
     System.out.print("번호? ");
@@ -58,7 +47,7 @@ public class InfoHandler {
     System.out.println("등록되었습니다.");
   }
   
-  static void listInfo() {
+  public static void listInfo() {
     for (int i = 0; i < infoCount; i++) {
       Info in = infos[i];
       System.out.printf("%d, %s, %s, %s, %s, %s, %s, %s, %d분\n", 
