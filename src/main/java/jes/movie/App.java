@@ -5,6 +5,7 @@ import java.util.Scanner;
 import jes.movie.handler.InfoHandler;
 import jes.movie.handler.MemberHandler;
 import jes.movie.handler.ReviewHandler;
+import jes.movie.handler.ReviewHandler2;
 
 public class App {
   static Scanner keyboard = new Scanner(System.in);
@@ -15,6 +16,7 @@ public class App {
     InfoHandler.keyboard = keyboard;
     MemberHandler.keyboard = keyboard;
     ReviewHandler.keyboard = keyboard;
+    ReviewHandler2.keyboard = keyboard;
 
     do {
       System.out.print("\n명령> ");
@@ -33,12 +35,29 @@ public class App {
         case "/member/list":
           MemberHandler.listMember();
           break;
+          
         case "/review/add":
           ReviewHandler.addReview();
           break;
 
         case "/review/list":
           ReviewHandler.listReview();
+          break;
+          
+        case "/review/detail":
+          ReviewHandler.detailReview();
+          break;
+          
+        case "/review2/add":
+          ReviewHandler2.addReview();
+          break;
+
+        case "/review2/list":
+          ReviewHandler2.listReview();
+          break;
+          
+        case "/review2/detail":
+          ReviewHandler2.detailReview();
           break;
         default:
           if (!command.equalsIgnoreCase("quit")) {

@@ -5,7 +5,7 @@ import java.util.Scanner;
 import jes.movie.domain.Review;
 
 
-public class ReviewHandler {
+public class ReviewHandler2 {
 
   static final int REVIEW_SIZE = 100;
   static int reviewCount = 0;
