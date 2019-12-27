@@ -8,18 +8,15 @@ import jes.movie.handler.ReviewHandler;
 
 public class App {
   static Scanner keyboard = new Scanner(System.in);
-  static String command; 
 
 
   public static void main(String[] args) {
-    InfoHandler.keyboard = keyboard;
-    MemberHandler.keyboard = keyboard;
-    ReviewHandler.keyboard = keyboard;
- 
-    ReviewHandler reviewHandler1 = new ReviewHandler();
-    ReviewHandler reviewHandler2 = new ReviewHandler();
-    InfoHandler infoHandler1 = new InfoHandler();
-    MemberHandler memberHandler1 = new MemberHandler();
+    ReviewHandler reviewHandler1 = new ReviewHandler(keyboard);
+    ReviewHandler reviewHandler2 = new ReviewHandler(keyboard);
+    InfoHandler infoHandler1 = new InfoHandler(keyboard);
+    MemberHandler memberHandler1 = new MemberHandler(keyboard);
+    
+    String command; 
 
     do {
       System.out.print("\n명령> ");

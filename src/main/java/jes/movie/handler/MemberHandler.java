@@ -5,13 +5,18 @@ import java.util.Scanner;
 import jes.movie.domain.Member;
 
 public class MemberHandler {
-   
+
   static final int MEMBER_SIZE = 100;
-  public static Scanner keyboard;
-  
-   int memberCount = 0;
-   Member[] members = new Member[MEMBER_SIZE];
-  
+  public Scanner keyboard;
+
+  int memberCount = 0;
+  Member[] members;
+
+  public MemberHandler(Scanner keyboard) {
+    this.keyboard = keyboard;
+    this.members = new Member[MEMBER_SIZE];
+  }
+
   public void addMember() {
     Member member = new Member();
 
@@ -39,12 +44,11 @@ public class MemberHandler {
     System.out.println("저장되었습니다.");
 
   }
-  
+
   public void listMember() {
     for (int i = 0; i < this.memberCount; i++) {
       Member m = this.members[i];
-      System.out.printf("%d, %s, %s, %s, %s\n", 
-          m.no, m.name, m.email, m.tel, m.registerDate);
+      System.out.printf("%d, %s, %s, %s, %s\n", m.no, m.name, m.email, m.tel, m.registerDate);
     }
   }
 }

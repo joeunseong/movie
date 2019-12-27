@@ -7,11 +7,16 @@ import jes.movie.domain.Info;
 public class InfoHandler {
 
   static final int INFO_SIZE = 100;
-  public static Scanner keyboard;
+  public Scanner keyboard;
   
    int infoCount = 0;
-   Info[] infos = new Info[INFO_SIZE];
-  
+   Info[] infos;
+   
+   public InfoHandler(Scanner keyboard) {
+     this.keyboard = keyboard;
+     this.infos = new Info[INFO_SIZE];
+   }
+     
   public void addInfo() {
     Info info = new Info();
 

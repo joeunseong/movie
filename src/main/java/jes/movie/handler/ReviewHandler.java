@@ -4,15 +4,19 @@ import java.sql.Date;
 import java.util.Scanner;
 import jes.movie.domain.Review;
 
-
 public class ReviewHandler {
 
   int reviewCount = 0;
-  Review[] reviews = new Review[REVIEW_SIZE];
+  Review[] reviews;
   
   static final int REVIEW_SIZE = 100;
-  public static Scanner keyboard;
+  public Scanner keyboard;
 
+  public ReviewHandler(Scanner keyboard) {
+    this.keyboard = keyboard;
+    this.reviews = new Review[REVIEW_SIZE];
+  }
+  
   public void addReview() {
     Review review = new Review();
 
