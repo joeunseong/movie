@@ -7,11 +7,12 @@ import jes.movie.domain.Member;
 public class MemberHandler {
    
   static final int MEMBER_SIZE = 100;
-  static int memberCount = 0;
-  static Member[] members = new Member[MEMBER_SIZE];
   public static Scanner keyboard;
   
-  public static void addMember() {
+   int memberCount = 0;
+   Member[] members = new Member[MEMBER_SIZE];
+  
+  public void addMember() {
     Member member = new Member();
 
     System.out.print("번호? ");
@@ -34,14 +35,14 @@ public class MemberHandler {
 
     member.registerDate = new Date(System.currentTimeMillis());
 
-    members[memberCount++] = member;
+    this.members[this.memberCount++] = member;
     System.out.println("저장되었습니다.");
 
   }
   
-  public static void listMember() {
-    for (int i = 0; i < memberCount; i++) {
-      Member m = members[i];
+  public void listMember() {
+    for (int i = 0; i < this.memberCount; i++) {
+      Member m = this.members[i];
       System.out.printf("%d, %s, %s, %s, %s\n", 
           m.no, m.name, m.email, m.tel, m.registerDate);
     }

@@ -7,11 +7,12 @@ import jes.movie.domain.Info;
 public class InfoHandler {
 
   static final int INFO_SIZE = 100;
-  static int infoCount = 0;
-  static Info[] infos = new Info[INFO_SIZE];
   public static Scanner keyboard;
   
-  public static void addInfo() {
+   int infoCount = 0;
+   Info[] infos = new Info[INFO_SIZE];
+  
+  public void addInfo() {
     Info info = new Info();
 
     System.out.print("번호? ");
@@ -43,13 +44,13 @@ public class InfoHandler {
     System.out.print("러닝타임? ");
     info.runningTime = keyboard.nextInt();
     keyboard.nextLine();
-    infos[infoCount++] = info;
+    this.infos[this.infoCount++] = info;
     System.out.println("등록되었습니다.");
   }
   
-  public static void listInfo() {
-    for (int i = 0; i < infoCount; i++) {
-      Info in = infos[i];
+  public void listInfo() {
+    for (int i = 0; i < this.infoCount; i++) {
+      Info in = this.infos[i];
       System.out.printf("%d, %s, %s, %s, %s, %s, %s, %s, %d분\n", 
           in.no, in.movieTitle, in.genre, in.summary, in.director, in.actor, 
           in.kmrb, in.openDate, in.runningTime);

@@ -7,12 +7,13 @@ import jes.movie.domain.Review;
 
 public class ReviewHandler {
 
+  int reviewCount = 0;
+  Review[] reviews = new Review[REVIEW_SIZE];
+  
   static final int REVIEW_SIZE = 100;
-  static int reviewCount = 0;
-  static Review[] reviews = new Review[REVIEW_SIZE];
   public static Scanner keyboard;
 
-  public static void addReview() {
+  public void addReview() {
     Review review = new Review();
 
     System.out.print("번호? ");
@@ -26,28 +27,28 @@ public class ReviewHandler {
 
     review.updateDay = new Date(System.currentTimeMillis());
     review.viewCount = 0;
-    reviews[reviewCount++] = review;
+    this.reviews[this.reviewCount++] = review;
     System.out.println("저장되었습니다.");
 
   }
 
-  public static void listReview() {
-    for (int i = 0; i < reviewCount; i++) {
-      Review r = reviews[i];
+  public void listReview() {
+    for (int i = 0; i < this.reviewCount; i++) {
+      Review r = this.reviews[i];
       System.out.printf("%d, %s, %s, %s, %s\n", r.no, r.movieTitle, r.reviewSummary, r.updateDay,
           r.viewCount);
     }
   }
 
-  public static void detailReview() {
+  public void detailReview() {
     System.out.print("게시물 번호? ");
     int no = keyboard.nextInt();
     keyboard.nextLine();
 
     Review review = null;
-    for (int i = 0; i < reviewCount; i++) {
-      if (reviews[i].no == no) {
-        review = reviews[i];
+    for (int i = 0; i < this.reviewCount; i++) {
+      if (this.reviews[i].no == no) {
+        review = this.reviews[i];
         break;
       }
     }

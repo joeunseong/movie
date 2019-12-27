@@ -5,7 +5,6 @@ import java.util.Scanner;
 import jes.movie.handler.InfoHandler;
 import jes.movie.handler.MemberHandler;
 import jes.movie.handler.ReviewHandler;
-import jes.movie.handler.ReviewHandler2;
 
 public class App {
   static Scanner keyboard = new Scanner(System.in);
@@ -16,48 +15,52 @@ public class App {
     InfoHandler.keyboard = keyboard;
     MemberHandler.keyboard = keyboard;
     ReviewHandler.keyboard = keyboard;
-    ReviewHandler2.keyboard = keyboard;
+ 
+    ReviewHandler reviewHandler1 = new ReviewHandler();
+    ReviewHandler reviewHandler2 = new ReviewHandler();
+    InfoHandler infoHandler1 = new InfoHandler();
+    MemberHandler memberHandler1 = new MemberHandler();
 
     do {
       System.out.print("\n명령> ");
       command = keyboard.nextLine();
       switch (command) {
         case "/info/add":
-          InfoHandler.addInfo();
+          infoHandler1.addInfo();
           break;
         case "/info/list":
-          InfoHandler.listInfo();
+          infoHandler1.listInfo();
           break;
         case "/member/add":
-          MemberHandler.addMember();
+          memberHandler1.addMember();
           break;
 
         case "/member/list":
-          MemberHandler.listMember();
+          memberHandler1.listMember();
           break;
           
-        case "/review/add":
-          ReviewHandler.addReview();
+        case "/review1/add":
+          reviewHandler1.addReview();
           break;
 
-        case "/review/list":
-          ReviewHandler.listReview();
+        case "/review1/list":
+          reviewHandler1.listReview();
           break;
           
-        case "/review/detail":
-          ReviewHandler.detailReview();
+        case "/review1/detail":
+          reviewHandler1.detailReview();
           break;
           
         case "/review2/add":
-          ReviewHandler2.addReview();
+          reviewHandler2.addReview();
           break;
 
         case "/review2/list":
-          ReviewHandler2.listReview();
+          reviewHandler2.listReview();
           break;
           
         case "/review2/detail":
-          ReviewHandler2.detailReview();
+          reviewHandler2.detailReview();
           break;
         default:
           if (!command.equalsIgnoreCase("quit")) {
