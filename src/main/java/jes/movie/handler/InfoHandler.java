@@ -21,33 +21,33 @@ public class InfoHandler {
     Info info = new Info();
 
     System.out.print("번호? ");
-    info.no = keyboard.nextInt();
+    info.setNo(keyboard.nextInt());
 
     keyboard.nextLine();
 
     System.out.print("영화명? ");
-    info.movieTitle = keyboard.nextLine();
+    info.setMovieTitle(keyboard.nextLine());
 
     System.out.print("장르? ");
-    info.genre = keyboard.nextLine();
+    info.setGenre(keyboard.nextLine());
 
     System.out.print("줄거리? ");
-    info.summary = keyboard.nextLine();
+    info.setSummary(keyboard.nextLine());
 
     System.out.print("감독? ");
-    info.director = keyboard.nextLine();
+    info.setDirector(keyboard.nextLine());
 
     System.out.print("출연? ");
-    info.actor = keyboard.nextLine();
+    info.setActor(keyboard.nextLine());
 
     System.out.print("관람등급? ");
-    info.kmrb = keyboard.nextLine();
+    info.setKmrb(keyboard.nextLine());
 
     System.out.print("개봉일? ");
-    info.openDate = Date.valueOf(keyboard.nextLine());
+    info.setOpenDate(Date.valueOf(keyboard.nextLine()));
 
     System.out.print("러닝타임? ");
-    info.runningTime = keyboard.nextInt();
+    info.setRunningTime(keyboard.nextInt());
     keyboard.nextLine();
     this.infos[this.infoCount++] = info;
     System.out.println("등록되었습니다.");
@@ -57,8 +57,8 @@ public class InfoHandler {
     for (int i = 0; i < this.infoCount; i++) {
       Info in = this.infos[i];
       System.out.printf("%d, %s, %s, %s, %s, %s, %s, %s, %d분\n", 
-          in.no, in.movieTitle, in.genre, in.summary, in.director, in.actor, 
-          in.kmrb, in.openDate, in.runningTime);
+          in.getNo(), in.getMovieTitle(), in.getGenre(), in.getSummary(), in.getDirector(), 
+          in.getActor(), in.getKmrb(), in.getOpenDate(), in.getRunningTime());
     }
   }
   

@@ -21,16 +21,16 @@ public class ReviewHandler {
     Review review = new Review();
 
     System.out.print("번호? ");
-    review.no = Integer.parseInt(keyboard.nextLine());
+    review.setNo(Integer.parseInt(keyboard.nextLine()));
 
     System.out.print("영화 제목?");
-    review.movieTitle = keyboard.nextLine();
+    review.setMovieTitle(keyboard.nextLine());
 
     System.out.print("내용? ");
-    review.reviewSummary = keyboard.nextLine();
+    review.setReviewSummary(keyboard.nextLine());
 
-    review.updateDay = new Date(System.currentTimeMillis());
-    review.viewCount = 0;
+    review.setUpdateDay(new Date(System.currentTimeMillis()));
+    review.setViewCount(0);
     this.reviews[this.reviewCount++] = review;
     System.out.println("저장되었습니다.");
 
@@ -39,9 +39,9 @@ public class ReviewHandler {
   public void listReview() {
     for (int i = 0; i < this.reviewCount; i++) {
       Review r = this.reviews[i];
-      System.out.printf("%d, %s, %s, %s, %s\n", r.no, r.movieTitle, r.reviewSummary, r.updateDay,
-          r.viewCount);
-    }
+      System.out.printf("%d, %s, %s, %s, %s\n", 
+          r.getNo(), r.getMovieTitle(), r.getReviewSummary(), r.getUpdateDay(), r.getViewCount());
+      }
   }
 
   public void detailReview() {
@@ -51,7 +51,7 @@ public class ReviewHandler {
 
     Review review = null;
     for (int i = 0; i < this.reviewCount; i++) {
-      if (this.reviews[i].no == no) {
+      if (this.reviews[i].getNo() == no) {
         review = this.reviews[i];
         break;
       }
@@ -60,8 +60,8 @@ public class ReviewHandler {
       System.out.println("게시물 번호가 유효하지 않습니다.");
       return;
     }
-    System.out.printf("번호: %d\n", review.no);
-    System.out.printf("영화제목: %s\n", review.movieTitle);
-    System.out.printf("리뷰 내용: %s\n", review.reviewSummary);
+    System.out.printf("번호: %d\n", review.getNo());
+    System.out.printf("영화제목: %s\n", review.getMovieTitle());
+    System.out.printf("리뷰 내용: %s\n", review.getReviewSummary());
   }
 }
