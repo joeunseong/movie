@@ -36,15 +36,15 @@ public class App {
           memberHandler1.listMember();
           break;
           
-        case "/review1/add":
+        case "/review/add":
           reviewHandler1.addReview();
           break;
 
-        case "/review1/list":
+        case "/review/list":
           reviewHandler1.listReview();
           break;
           
-        case "/review1/detail":
+        case "/review/detail":
           reviewHandler1.detailReview();
           break;
           

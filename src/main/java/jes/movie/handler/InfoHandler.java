@@ -6,15 +6,18 @@ import jes.movie.domain.Info;
 
 public class InfoHandler {
 
-  static final int INFO_SIZE = 100;
   public Scanner keyboard;
   
-   int infoCount = 0;
-   Info[] infos;
-   
+  InfoList infoList;
+  
    public InfoHandler(Scanner keyboard) {
      this.keyboard = keyboard;
-     this.infos = new Info[INFO_SIZE];
+     infoList = new InfoList();
+   }
+   
+   public InfoHandler(Scanner keyboard, int capacity) {
+     this.keyboard = keyboard;
+     infoList = new InfoList(capacity);
    }
      
   public void addInfo() {
@@ -49,13 +52,14 @@ public class InfoHandler {
     System.out.print("러닝타임? ");
     info.setRunningTime(keyboard.nextInt());
     keyboard.nextLine();
-    this.infos[this.infoCount++] = info;
+    
+    infoList.add(info);
     System.out.println("등록되었습니다.");
   }
   
   public void listInfo() {
-    for (int i = 0; i < this.infoCount; i++) {
-      Info in = this.infos[i];
+    Info[] infos = infoList.toArray();
+    for (Info in : infos) {
       System.out.printf("%d, %s, %s, %s, %s, %s, %s, %s, %d분\n", 
           in.getNo(), in.getMovieTitle(), in.getGenre(), in.getSummary(), in.getDirector(), 
           in.getActor(), in.getKmrb(), in.getOpenDate(), in.getRunningTime());

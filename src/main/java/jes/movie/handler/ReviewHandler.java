@@ -6,17 +6,22 @@ import jes.movie.domain.Review;
 
 public class ReviewHandler {
 
-  int reviewCount = 0;
-  Review[] reviews;
-  
-  static final int REVIEW_SIZE = 100;
   public Scanner keyboard;
+
+  ReviewList reviewList;
 
   public ReviewHandler(Scanner keyboard) {
     this.keyboard = keyboard;
-    this.reviews = new Review[REVIEW_SIZE];
+    reviewList = new ReviewList();
+    
   }
   
+  public ReviewHandler(Scanner keyboard, int capacity) {
+    this.keyboard = keyboard;
+    reviewList = new ReviewList(capacity);
+    
+  }
+
   public void addReview() {
     Review review = new Review();
 
@@ -31,17 +36,19 @@ public class ReviewHandler {
 
     review.setUpdateDay(new Date(System.currentTimeMillis()));
     review.setViewCount(0);
-    this.reviews[this.reviewCount++] = review;
+    
+    reviewList.add(review);
     System.out.println("저장되었습니다.");
 
   }
 
   public void listReview() {
-    for (int i = 0; i < this.reviewCount; i++) {
-      Review r = this.reviews[i];
+    Review[] reviews = reviewList.toArray();
+    for (Review r : reviews) {
       System.out.printf("%d, %s, %s, %s, %s\n", 
-          r.getNo(), r.getMovieTitle(), r.getReviewSummary(), r.getUpdateDay(), r.getViewCount());
-      }
+          r.getNo(), r.getMovieTitle(), r.getReviewSummary(), 
+          r.getUpdateDay(), r.getViewCount());
+    }
   }
 
   public void detailReview() {
@@ -49,13 +56,8 @@ public class ReviewHandler {
     int no = keyboard.nextInt();
     keyboard.nextLine();
 
-    Review review = null;
-    for (int i = 0; i < this.reviewCount; i++) {
-      if (this.reviews[i].getNo() == no) {
-        review = this.reviews[i];
-        break;
-      }
-    }
+    Review review = reviewList.get(no);
+ 
     if (review == null) {
       System.out.println("게시물 번호가 유효하지 않습니다.");
       return;

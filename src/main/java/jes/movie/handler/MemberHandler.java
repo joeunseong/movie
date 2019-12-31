@@ -6,15 +6,17 @@ import jes.movie.domain.Member;
 
 public class MemberHandler {
 
-  static final int MEMBER_SIZE = 100;
   public Scanner keyboard;
-
-  int memberCount = 0;
-  Member[] members;
+  MemberList memberList;
 
   public MemberHandler(Scanner keyboard) {
     this.keyboard = keyboard;
-    this.members = new Member[MEMBER_SIZE];
+    memberList = new MemberList();
+  }
+  
+  public MemberHandler(Scanner keyboard, int capacity) {
+    this.keyboard = keyboard;
+    memberList = new MemberList();
   }
 
   public void addMember() {
@@ -40,14 +42,14 @@ public class MemberHandler {
 
     member.setRegisterDate(new Date(System.currentTimeMillis()));
 
-    this.members[this.memberCount++] = member;
+    memberList.add(member);
     System.out.println("저장되었습니다.");
 
   }
 
   public void listMember() {
-    for (int i = 0; i < this.memberCount; i++) {
-      Member m = this.members[i];
+    Member[] members = memberList.toArray();
+    for (Member m : members) {
       System.out.printf("%d, %s, %s, %s, %s\n", 
           m.getNo(), m.getName(), m.getEmail(), m.getTel(), m.getRegisterDate());
     }
