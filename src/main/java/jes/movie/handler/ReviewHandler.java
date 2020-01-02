@@ -8,17 +8,17 @@ public class ReviewHandler {
 
   public Scanner keyboard;
 
-  ReviewList reviewList;
+  ArrayList reviewList;
 
   public ReviewHandler(Scanner keyboard) {
     this.keyboard = keyboard;
-    reviewList = new ReviewList();
+    reviewList = new ArrayList();
     
   }
   
   public ReviewHandler(Scanner keyboard, int capacity) {
     this.keyboard = keyboard;
-    reviewList = new ReviewList(capacity);
+    reviewList = new ArrayList(capacity);
     
   }
 
@@ -43,8 +43,9 @@ public class ReviewHandler {
   }
 
   public void listReview() {
-    Review[] reviews = reviewList.toArray();
-    for (Review r : reviews) {
+    Object[] arr = reviewList.toArray();
+    for (Object obj : arr) {
+      Review r = (Review) obj;
       System.out.printf("%d, %s, %s, %s, %s\n", 
           r.getNo(), r.getMovieTitle(), r.getReviewSummary(), 
           r.getUpdateDay(), r.getViewCount());
@@ -52,14 +53,14 @@ public class ReviewHandler {
   }
 
   public void detailReview() {
-    System.out.print("게시물 번호? ");
-    int no = keyboard.nextInt();
+    System.out.print("인덱스 번호? ");
+    int index = keyboard.nextInt();
     keyboard.nextLine();
 
-    Review review = reviewList.get(no);
+    Review review = (Review)this.reviewList.get(index);
  
     if (review == null) {
-      System.out.println("게시물 번호가 유효하지 않습니다.");
+      System.out.println("인덱스 번호가 유효하지 않습니다.");
       return;
     }
     System.out.printf("번호: %d\n", review.getNo());

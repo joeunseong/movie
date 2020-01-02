@@ -3,43 +3,42 @@ package jes.movie.handler;
 import java.util.Arrays;
 import jes.movie.domain.Review;
 
-public class ReviewList {
+public class ArrayList {
   static final int DEFAULT_SIZE = 100;
 
   int size = 0;
-  Review[] list;
+  Object[] list;
 
-  public ReviewList() {
-    this.list = new Review[DEFAULT_SIZE];
+  public ArrayList() {
+    this.list = new Object[DEFAULT_SIZE];
   }
 
-  public ReviewList(int capacity) {
+  public ArrayList(int capacity) {
     if (capacity < DEFAULT_SIZE || capacity > 10000)
-      this.list = new Review[DEFAULT_SIZE];
+      this.list = new Object[DEFAULT_SIZE];
     else
-      this.list = new Review[capacity];
+      this.list = new Object[capacity];
   }
 
-  public void add(Review review) {
+  public void add(Object obj) {
     if (this.size == this.list.length) {
       int oldCapacity = this.list.length;
       int newCapacity = oldCapacity + (oldCapacity >> 1);
       this.list = Arrays.copyOf(this.list, newCapacity);
       System.out.printf("새 배열을 %d 개 생성하였음!\n", newCapacity);
     }
-    this.list[this.size++] = review;
+    this.list[this.size++] = obj;
   }
 
-  public Review[] toArray() {
+  public Object[] toArray() {
     return Arrays.copyOf(this.list, this.size);
   }
 
-  public Review get(int no) {
-    for (int i = 0; i < this.size; i++) {
-      if (this.list[i].getNo() == no) {
-        return this.list[i];
-      }
+  public Object get(int idx) {
+    if (idx >= 0 && idx < this.size) {
+      return this.list[idx];
+    } else {
+      return null;
     }
-    return null;
   }
 }

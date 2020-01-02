@@ -8,16 +8,16 @@ public class InfoHandler {
 
   public Scanner keyboard;
   
-  InfoList infoList;
+  ArrayList infoList;
   
    public InfoHandler(Scanner keyboard) {
      this.keyboard = keyboard;
-     infoList = new InfoList();
+     infoList = new ArrayList();
    }
    
    public InfoHandler(Scanner keyboard, int capacity) {
      this.keyboard = keyboard;
-     infoList = new InfoList(capacity);
+     infoList = new ArrayList(capacity);
    }
      
   public void addInfo() {
@@ -58,8 +58,9 @@ public class InfoHandler {
   }
   
   public void listInfo() {
-    Info[] infos = infoList.toArray();
-    for (Info in : infos) {
+    Object[] arr = infoList.toArray();
+    for (Object obj : arr) {
+      Info in = (Info) obj;
       System.out.printf("%d, %s, %s, %s, %s, %s, %s, %s, %d분\n", 
           in.getNo(), in.getMovieTitle(), in.getGenre(), in.getSummary(), in.getDirector(), 
           in.getActor(), in.getKmrb(), in.getOpenDate(), in.getRunningTime());

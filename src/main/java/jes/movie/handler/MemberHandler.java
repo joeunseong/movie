@@ -7,16 +7,16 @@ import jes.movie.domain.Member;
 public class MemberHandler {
 
   public Scanner keyboard;
-  MemberList memberList;
+  ArrayList memberList;
 
   public MemberHandler(Scanner keyboard) {
     this.keyboard = keyboard;
-    memberList = new MemberList();
+    memberList = new ArrayList();
   }
   
   public MemberHandler(Scanner keyboard, int capacity) {
     this.keyboard = keyboard;
-    memberList = new MemberList();
+    memberList = new ArrayList();
   }
 
   public void addMember() {
@@ -48,8 +48,9 @@ public class MemberHandler {
   }
 
   public void listMember() {
-    Member[] members = memberList.toArray();
-    for (Member m : members) {
+    Object[] arr = memberList.toArray();
+    for (Object obj : arr) {
+      Member m = (Member) obj;
       System.out.printf("%d, %s, %s, %s, %s\n", 
           m.getNo(), m.getName(), m.getEmail(), m.getTel(), m.getRegisterDate());
     }
