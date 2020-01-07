@@ -11,10 +11,9 @@ public class App {
 
 
   public static void main(String[] args) {
-    ReviewHandler reviewHandler1 = new ReviewHandler(keyboard);
-    ReviewHandler reviewHandler2 = new ReviewHandler(keyboard);
-    InfoHandler infoHandler1 = new InfoHandler(keyboard);
-    MemberHandler memberHandler1 = new MemberHandler(keyboard);
+    ReviewHandler reviewHandler = new ReviewHandler(keyboard);
+    InfoHandler infoHandler = new InfoHandler(keyboard);
+    MemberHandler memberHandler = new MemberHandler(keyboard);
     
     String command; 
 
@@ -23,42 +22,42 @@ public class App {
       command = keyboard.nextLine();
       switch (command) {
         case "/info/add":
-          infoHandler1.addInfo();
+          infoHandler.addInfo();
           break;
+          
         case "/info/list":
-          infoHandler1.listInfo();
+          infoHandler.listInfo();
           break;
+          
+        case "/info/detail":
+          infoHandler.detailInfo();
+          break;
+          
         case "/member/add":
-          memberHandler1.addMember();
+          memberHandler.addMember();
           break;
 
         case "/member/list":
-          memberHandler1.listMember();
+          memberHandler.listMember();
+          break;
+          
+        case "/member/detail":
+          memberHandler.detailMember();;
           break;
           
         case "/review/add":
-          reviewHandler1.addReview();
+          reviewHandler.addReview();
           break;
 
         case "/review/list":
-          reviewHandler1.listReview();
+          reviewHandler.listReview();
           break;
           
         case "/review/detail":
-          reviewHandler1.detailReview();
+          reviewHandler.detailReview();
           break;
           
-        case "/review2/add":
-          reviewHandler2.addReview();
-          break;
-
-        case "/review2/list":
-          reviewHandler2.listReview();
-          break;
-          
-        case "/review2/detail":
-          reviewHandler2.detailReview();
-          break;
+       
         default:
           if (!command.equalsIgnoreCase("quit")) {
             System.out.println("실행할 수 없는 명령입니다.");

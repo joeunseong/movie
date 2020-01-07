@@ -3,20 +3,21 @@ package jes.movie.handler;
 import java.sql.Date;
 import java.util.Scanner;
 import jes.movie.domain.Member;
+import jes.movie.util.ArrayList;
 
 public class MemberHandler {
 
   public Scanner keyboard;
-  ArrayList memberList;
+  ArrayList<Member> memberList;
 
   public MemberHandler(Scanner keyboard) {
     this.keyboard = keyboard;
-    memberList = new ArrayList();
+    memberList = new ArrayList<>();
   }
-  
+
   public MemberHandler(Scanner keyboard, int capacity) {
     this.keyboard = keyboard;
-    memberList = new ArrayList();
+    memberList = new ArrayList<>();
   }
 
   public void addMember() {
@@ -48,11 +49,10 @@ public class MemberHandler {
   }
 
   public void listMember() {
-    Object[] arr = memberList.toArray();
-    for (Object obj : arr) {
-      Member m = (Member) obj;
-      System.out.printf("%d, %s, %s, %s, %s\n", 
-          m.getNo(), m.getName(), m.getEmail(), m.getTel(), m.getRegisterDate());
+    Member[] arr = memberList.toArray(new Member[] {});
+    for (Member m : arr) {
+      System.out.printf("%d, %s, %s, %s, %s\n", m.getNo(), m.getName(), m.getEmail(), m.getTel(),
+          m.getRegisterDate());
     }
   }
 }

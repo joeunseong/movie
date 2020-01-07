@@ -3,22 +3,23 @@ package jes.movie.handler;
 import java.sql.Date;
 import java.util.Scanner;
 import jes.movie.domain.Review;
+import jes.movie.util.ArrayList;
 
 public class ReviewHandler {
 
   public Scanner keyboard;
 
-  ArrayList reviewList;
+  ArrayList<Review> reviewList;
 
   public ReviewHandler(Scanner keyboard) {
     this.keyboard = keyboard;
-    reviewList = new ArrayList();
+    reviewList = new ArrayList<>();
     
   }
   
   public ReviewHandler(Scanner keyboard, int capacity) {
     this.keyboard = keyboard;
-    reviewList = new ArrayList(capacity);
+    reviewList = new ArrayList<>(capacity);
     
   }
 
@@ -43,9 +44,9 @@ public class ReviewHandler {
   }
 
   public void listReview() {
-    Object[] arr = reviewList.toArray();
-    for (Object obj : arr) {
-      Review r = (Review) obj;
+    Review[] arr = new Review[this.reviewList.size()];
+    this.reviewList.toArray(arr);
+    for (Review r : arr) {
       System.out.printf("%d, %s, %s, %s, %s\n", 
           r.getNo(), r.getMovieTitle(), r.getReviewSummary(), 
           r.getUpdateDay(), r.getViewCount());
@@ -57,7 +58,7 @@ public class ReviewHandler {
     int index = keyboard.nextInt();
     keyboard.nextLine();
 
-    Review review = (Review)this.reviewList.get(index);
+    Review review = this.reviewList.get(index);
  
     if (review == null) {
       System.out.println("인덱스 번호가 유효하지 않습니다.");

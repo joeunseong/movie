@@ -3,23 +3,24 @@ package jes.movie.handler;
 import java.sql.Date;
 import java.util.Scanner;
 import jes.movie.domain.Info;
+import jes.movie.util.ArrayList;
 
 public class InfoHandler {
 
   public Scanner keyboard;
-  
-  ArrayList infoList;
-  
-   public InfoHandler(Scanner keyboard) {
-     this.keyboard = keyboard;
-     infoList = new ArrayList();
-   }
-   
-   public InfoHandler(Scanner keyboard, int capacity) {
-     this.keyboard = keyboard;
-     infoList = new ArrayList(capacity);
-   }
-     
+
+  ArrayList<Info> infoList;
+
+  public InfoHandler(Scanner keyboard) {
+    this.keyboard = keyboard;
+    infoList = new ArrayList<>();
+  }
+
+  public InfoHandler(Scanner keyboard, int capacity) {
+    this.keyboard = keyboard;
+    infoList = new ArrayList<>(capacity);
+  }
+
   public void addInfo() {
     Info info = new Info();
 
@@ -52,19 +53,19 @@ public class InfoHandler {
     System.out.print("러닝타임? ");
     info.setRunningTime(keyboard.nextInt());
     keyboard.nextLine();
-    
+
     infoList.add(info);
     System.out.println("등록되었습니다.");
   }
-  
+
   public void listInfo() {
-    Object[] arr = infoList.toArray();
-    for (Object obj : arr) {
-      Info in = (Info) obj;
+    Info[] arr = this.infoList.toArray(new Info[this.infoList.size()]);
+    for (Info in : arr) {
       System.out.printf("%d, %s, %s, %s, %s, %s, %s, %s, %d분\n", 
-          in.getNo(), in.getMovieTitle(), in.getGenre(), in.getSummary(), in.getDirector(), 
-          in.getActor(), in.getKmrb(), in.getOpenDate(), in.getRunningTime());
+          in.getNo(), in.getMovieTitle(), in.getGenre(), in.getSummary(), 
+          in.getDirector(), in.getActor(), in.getKmrb(),
+          in.getOpenDate(), in.getRunningTime());
     }
   }
-  
+
 }
