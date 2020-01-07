@@ -53,8 +53,37 @@ public class ArrayList<E> {
       return null;
     }
   }
-
+  
+  @SuppressWarnings("unchecked")
+  public E set(int index, E obj) {
+    if(index < 0 || index >=this.size)
+      return null;
+    E old = (E) this.list[index];
+    this.list[index] = obj;
+    
+    return old;
+  }
+  
+  @SuppressWarnings("unchecked")
+  public E remove(int index) {
+    if(index < 0 || index >= this.size)
+      return null;
+    
+    E old = (E) this.list[index];
+    
+    for (int i = index + 1; i < this.size; i++) {
+      this.list[i - 1] = this.list[i];
+    }
+      
+      this.size--;
+      
+      this.list[this.size] = null;
+      
+    return old;
+  }
+  
   public int size() {
     return this.size;
   }
+
 }

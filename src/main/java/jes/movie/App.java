@@ -14,8 +14,8 @@ public class App {
     ReviewHandler reviewHandler = new ReviewHandler(keyboard);
     InfoHandler infoHandler = new InfoHandler(keyboard);
     MemberHandler memberHandler = new MemberHandler(keyboard);
-    
-    String command; 
+
+    String command;
 
     do {
       System.out.print("\n명령> ");
@@ -24,13 +24,21 @@ public class App {
         case "/info/add":
           infoHandler.addInfo();
           break;
-          
+
         case "/info/list":
           infoHandler.listInfo();
           break;
-          
+
         case "/info/detail":
           infoHandler.detailInfo();
+          break;
+
+        case "/info/update":
+          infoHandler.updateInfo();
+          break;
+          
+        case "/info/delete":
+          infoHandler.deleteInfo();
           break;
           
         case "/member/add":
@@ -40,11 +48,19 @@ public class App {
         case "/member/list":
           memberHandler.listMember();
           break;
-          
+
         case "/member/detail":
           memberHandler.detailMember();;
           break;
           
+        case "/member/update":
+          memberHandler.updateMember();;
+          break;
+          
+        case "/member/delete":
+          memberHandler.deleteMember();
+          break;
+
         case "/review/add":
           reviewHandler.addReview();
           break;
@@ -52,12 +68,19 @@ public class App {
         case "/review/list":
           reviewHandler.listReview();
           break;
-          
+
         case "/review/detail":
           reviewHandler.detailReview();
           break;
           
-       
+        case "/review/update":
+          reviewHandler.updateReview();
+          break;
+          
+        case "/review/delete":
+          reviewHandler.deleteReview();
+          break;
+
         default:
           if (!command.equalsIgnoreCase("quit")) {
             System.out.println("실행할 수 없는 명령입니다.");

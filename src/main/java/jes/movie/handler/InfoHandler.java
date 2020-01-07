@@ -67,5 +67,92 @@ public class InfoHandler {
           in.getOpenDate(), in.getRunningTime());
     }
   }
+  
+  public void detailInfo() {
+    System.out.print("정보 인덱스? ");
+    int index = keyboard.nextInt();
+    keyboard.nextLine();
+
+    Info info = this.infoList.get(index);
+
+    if (info == null) {
+      System.out.println("유효한 정보 인덱스가 없습니다.");
+      return;
+    }
+
+    System.out.printf("영화명 : %s\n", info.getMovieTitle());
+    System.out.printf("장르: %s\n", info.getGenre());
+    System.out.printf("줄거리: %s\n", info.getSummary());
+    System.out.printf("감독: %s\n", info.getDirector());
+    System.out.printf("출연: %s\n", info.getActor());
+    System.out.printf("관람등급: %s\n", info.getKmrb());
+    System.out.printf("개봉일: %s\n", info.getOpenDate());
+    System.out.printf("러닝타임: %d\n", info.getRunningTime());
+  }
+  
+  public void updateInfo() {
+    System.out.print("정보 인덱스? ");
+    int index = keyboard.nextInt();
+    keyboard.nextLine();
+
+    Info oldInfo = this.infoList.get(index);
+
+    if (oldInfo == null) {
+      System.out.println("유효한 정보 인덱스가 없습니다.");
+      return;
+    }
+    
+    System.out.printf("영화명(%s)", oldInfo.getMovieTitle());
+    String movieTitle = keyboard.nextLine();
+    
+    if(movieTitle.length() == 0) {
+      System.out.println("정보 인덱스 변경을 취소합니다.");
+      return;
+    }
+    Info newInfo = new Info();
+    newInfo.setMovieTitle(movieTitle);
+    newInfo.setNo(oldInfo.getNo());
+    
+    System.out.printf("장르(%s)? ", oldInfo.getGenre());
+    newInfo.setGenre(keyboard.nextLine());
+    
+    System.out.printf("줄거리(%s)? ", oldInfo.getSummary());
+    newInfo.setSummary(keyboard.nextLine());
+    
+    System.out.printf("감독(%s)? ", oldInfo.getDirector());
+    newInfo.setDirector(keyboard.nextLine());
+    
+    System.out.printf("출연(%s)? ", oldInfo.getActor());
+    newInfo.setActor(keyboard.nextLine());
+    
+    System.out.printf("관람등급(%s)? ", oldInfo.getKmrb());
+    newInfo.setKmrb(keyboard.nextLine());
+    
+    System.out.printf("개봉일(%s)? ", oldInfo.getOpenDate());
+    newInfo.setOpenDate(Date.valueOf(keyboard.nextLine()));
+    
+    System.out.printf("러닝타임: %d\n", oldInfo.getRunningTime());
+    newInfo.setRunningTime(keyboard.nextInt());
+    keyboard.nextLine();
+    
+    this.infoList.set(index, newInfo);
+    System.out.println("정보가 수정되었습니다.");
+  }
+  
+  public void deleteInfo() {
+    System.out.print("정보 인덱스? ");
+    int index = keyboard.nextInt();
+    keyboard.nextLine();
+    
+    Info info = this.infoList.get(index);
+    if(info == null) {
+      System.out.println("존재하지 않는 정보 인덱스입니다.");
+      return;
+    }
+    
+    this.infoList.remove(index);
+    System.out.println("정보 인덱스를 삭제했습니다.");
+  }
+
 
 }
