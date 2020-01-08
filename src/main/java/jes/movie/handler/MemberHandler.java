@@ -51,23 +51,24 @@ public class MemberHandler {
   public void listMember() {
     Member[] arr = memberList.toArray(new Member[] {});
     for (Member m : arr) {
-      System.out.printf("%d, %s, %s, %s, %s\n", m.getNo(), m.getName(), m.getEmail(), m.getTel(),
+      System.out.printf("%d, %s, %s, %s, %s\n", 
+          m.getNo(), m.getName(), m.getEmail(), m.getTel(),
           m.getRegisterDate());
     }
   }
 
   public void detailMember() {
-    System.out.print("인덱스?");
-    int index = keyboard.nextInt();
+    System.out.print("번호?");
+    int no = keyboard.nextInt();
     keyboard.nextLine();
 
-    Member member = this.memberList.get(index);
-
-    if (member == null) {
-      System.out.println("유효한 인덱스 멤버는 없습니다.");
+    int index = indexOfMember(no);
+    
+    if(index == -1) {
+      System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
-
+    Member member = this.memberList.get(index);
     System.out.printf("이름: %s\n", member.getName());
     System.out.printf("이메일: %s\n", member.getEmail());
     System.out.printf("암호: %s\n", member.getPassword());
@@ -77,59 +78,90 @@ public class MemberHandler {
   }
 
   public void updateMember() {
-    System.out.print("멤버 인덱스? ");
-    int index = keyboard.nextInt();
+    System.out.print("번호? ");
+    int no = keyboard.nextInt();
     keyboard.nextLine();
 
+    int index = indexOfMember(no);
+
+    if (index == -1) {
+      System.out.println("해당 번호의 게시글이 없습니다.");
+      return;
+    }
+
     Member oldMember = this.memberList.get(index);
-
-    if (oldMember == null) {
-      System.out.println("유효한 멤버 인덱스가 없습니다.");
-      return;
-    }
-
-    System.out.printf("이름(%s)? ", oldMember.getName());
-    String name = keyboard.nextLine();
-
-    if (name.length() == 0) {
-      System.out.println("수정을 취소합니다.");
-      return;
-    }
-
     Member newMember = new Member();
+    String inputStr = null;
+    
+    System.out.printf("이름(%s)? ", oldMember.getName());
+    inputStr = keyboard.nextLine();
+    if(inputStr.length() ==0 ) {
+      newMember.setName(oldMember.getName());
+    } else {
+      newMember.setName(inputStr);
+    }
+
     newMember.setNo(oldMember.getNo());
-    newMember.setName(name);
 
     System.out.printf("이메일(%s)? ", oldMember.getEmail());
-    newMember.setEmail(keyboard.nextLine());
-
+    inputStr = keyboard.nextLine();
+    if(inputStr.length() ==0 ) {
+      newMember.setEmail(oldMember.getEmail());
+    } else {
+      newMember.setEmail(inputStr);
+    }
+    
     System.out.printf("암호(%s)? ", oldMember.getPassword());
-    newMember.setPassword(keyboard.nextLine());
+    inputStr = keyboard.nextLine();
+    if(inputStr.length() ==0 ) {
+      newMember.setPassword(oldMember.getPassword());
+    } else {
+      newMember.setPassword(inputStr);
+    }
 
     System.out.printf("사진(%s)? ", oldMember.getPhoto());
-    newMember.setPhoto(keyboard.nextLine());
-
+    inputStr = keyboard.nextLine();
+    if(inputStr.length() ==0 ) {
+      newMember.setPhoto(oldMember.getName());
+    } else {
+      newMember.setPhoto(inputStr);
+    }
+    
     System.out.printf("전화(%s)? ", oldMember.getTel());
-    newMember.setTel(keyboard.nextLine());
-
+    inputStr = keyboard.nextLine();
+    if(inputStr.length() ==0 ) {
+      newMember.setTel(oldMember.getName());
+    } else {
+      newMember.setTel(inputStr);
+    }
     newMember.setRegisterDate(new Date(System.currentTimeMillis()));
+    
     this.memberList.set(index, newMember);
     System.out.println("멤버 정보가 변경되었습니다.");
   }
 
   public void deleteMember() {
-    System.out.print("멤버 인덱스? ");
-    int index = keyboard.nextInt();
+    System.out.print("번호?  ");
+    int no = keyboard.nextInt();
     keyboard.nextLine();
-
-    Member member = this.memberList.get(index);
-
-    if (member == null) {
-      System.out.println("해당 멤버 인덱스가 존재하지 않습니다.");
+    
+    int index = indexOfMember(no);
+    
+    if (index == -1) {
+      System.out.println("해당 번호의 멤버 정보가 없습니다.");
       return;
     }
 
     this.memberList.remove(index);
     System.out.println("해당 멤버 인덱스를 삭제했습니다.");
+  }
+  
+  private int indexOfMember(int no) {
+    for ( int i = 0; i < this.memberList.size(); i++) {
+      if(this.memberList.get(i).getNo() == no) {
+        return i;
+      }
+    }
+    return -1;
   }
 }

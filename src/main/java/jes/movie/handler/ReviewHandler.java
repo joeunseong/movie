@@ -54,47 +54,56 @@ public class ReviewHandler {
   }
 
   public void detailReview() {
-    System.out.print("인덱스 번호? ");
-    int index = keyboard.nextInt();
+    System.out.print("번호? ");
+    int no = keyboard.nextInt();
     keyboard.nextLine();
-
-    Review review = this.reviewList.get(index);
- 
-    if (review == null) {
-      System.out.println("인덱스 번호가 유효하지 않습니다.");
+    
+    int index = indexOfReview(no);
+    
+    if(index == -1) {
+      System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
+    
+    Review review = this.reviewList.get(index);
+    
     System.out.printf("번호: %d\n", review.getNo());
     System.out.printf("영화제목: %s\n", review.getMovieTitle());
     System.out.printf("리뷰 내용: %s\n", review.getReviewSummary());
   }
   
   public void updateReview() {
-    System.out.print("리뷰 인덱스? ");
-    int index = keyboard.nextInt();
+    System.out.print("번호? ");
+    int no = keyboard.nextInt();
     keyboard.nextLine();
 
-    Review oldReview = this.reviewList.get(index);
- 
-    if (oldReview == null) {
-      System.out.println("리뷰 인덱스가 유효하지 않습니다.");
+    int index = indexOfReview(no);
+    
+    if(index == -1) {
+      System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
+    
+    Review oldReview = this.reviewList.get(index);
+    String inputStr = null;
     Review newReview = new Review();
     newReview.setNo(oldReview.getNo());
     
     System.out.printf("영화제목(%s)? ", oldReview.getMovieTitle());
-    String movieTitle = keyboard.nextLine();
-    
-    if(movieTitle.length() == 0) {
-      System.out.println("리뷰 변경을 취소합니다.");
-      return;
+    inputStr = keyboard.nextLine();
+    if(inputStr.length() == 0) {
+      newReview.setMovieTitle(oldReview.getMovieTitle());
+    } else {
+      newReview.setMovieTitle(inputStr);
     }
     
-    newReview.setMovieTitle(movieTitle);
-    
-    System.out.printf("리뷰 내용(%s)? ", oldReview.getReviewSummary());
-    newReview.setReviewSummary(keyboard.nextLine());
+    System.out.printf("리뷰 내용? ");
+    inputStr = keyboard.nextLine();
+    if(inputStr.length() == 0) {
+      newReview.setReviewSummary(oldReview.getMovieTitle());
+    } else {
+      newReview.setReviewSummary(inputStr);
+    }
     
     newReview.setUpdateDay(new Date(System.currentTimeMillis()));
     newReview.setViewCount(0);
@@ -105,18 +114,26 @@ public class ReviewHandler {
   }
   
   public void deleteReview() {
-    System.out.print("리뷰 인덱스? ");
-    int index = keyboard.nextInt();
+    System.out.print("번호? ");
+    int no = keyboard.nextInt();
     keyboard.nextLine();
 
-    Review review = this.reviewList.get(index);
- 
-    if (review == null) {
-      System.out.println("리뷰 인덱스가 유효하지 않습니다.");
+    int index = indexOfReview(no);
+    if(index == -1) {
+      System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
     
     this.reviewList.remove(index);
     System.out.println("리뷰 인덱스를 삭제했습니다.");
+  }
+  
+  private int indexOfReview(int no) {
+    for(int i =0; i< this.reviewList.size(); i++) {
+      if(this.reviewList.get(i).getNo() == no) {
+        return i;
+      }
+    }
+    return -1;
   }
 }

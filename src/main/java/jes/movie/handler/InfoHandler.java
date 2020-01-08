@@ -69,17 +69,17 @@ public class InfoHandler {
   }
   
   public void detailInfo() {
-    System.out.print("정보 인덱스? ");
-    int index = keyboard.nextInt();
+    System.out.print("번호? ");
+    int no = keyboard.nextInt();
     keyboard.nextLine();
-
-    Info info = this.infoList.get(index);
-
-    if (info == null) {
-      System.out.println("유효한 정보 인덱스가 없습니다.");
+    
+    int index = indexOfInfo(no);
+    if(index == -1) {
+      System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
 
+    Info info = this.infoList.get(index);
     System.out.printf("영화명 : %s\n", info.getMovieTitle());
     System.out.printf("장르: %s\n", info.getGenre());
     System.out.printf("줄거리: %s\n", info.getSummary());
@@ -91,62 +91,103 @@ public class InfoHandler {
   }
   
   public void updateInfo() {
-    System.out.print("정보 인덱스? ");
-    int index = keyboard.nextInt();
+    System.out.print("번호? ");
+    int no = keyboard.nextInt();
     keyboard.nextLine();
-
+    
+    int index = indexOfInfo(no);
+    if(index == -1) {
+      System.out.println("해당 번호의 게시글이 없습니다.");
+      return;
+    }
+    
     Info oldInfo = this.infoList.get(index);
-
-    if (oldInfo == null) {
-      System.out.println("유효한 정보 인덱스가 없습니다.");
-      return;
-    }
-    
-    System.out.printf("영화명(%s)", oldInfo.getMovieTitle());
-    String movieTitle = keyboard.nextLine();
-    
-    if(movieTitle.length() == 0) {
-      System.out.println("정보 인덱스 변경을 취소합니다.");
-      return;
-    }
+    String inputStr = null;
     Info newInfo = new Info();
-    newInfo.setMovieTitle(movieTitle);
+    
+    System.out.printf("영화명(%s)?", oldInfo.getMovieTitle());
+    inputStr = keyboard.nextLine();
+    
+    if(inputStr.length() == 0) {
+      newInfo.setMovieTitle(oldInfo.getMovieTitle());
+    } else {
+      newInfo.setMovieTitle(inputStr);
+    }
+    
     newInfo.setNo(oldInfo.getNo());
     
     System.out.printf("장르(%s)? ", oldInfo.getGenre());
-    newInfo.setGenre(keyboard.nextLine());
+    inputStr = keyboard.nextLine();
+    
+    if(inputStr.length() == 0) {
+      newInfo.setGenre(oldInfo.getGenre());
+    } else {
+      newInfo.setGenre(inputStr);
+    }
     
     System.out.printf("줄거리(%s)? ", oldInfo.getSummary());
-    newInfo.setSummary(keyboard.nextLine());
+    inputStr = keyboard.nextLine();
+    if(inputStr.length() == 0) {
+      newInfo.setSummary(oldInfo.getSummary());
+    } else {
+      newInfo.setSummary(inputStr);
+    }
     
     System.out.printf("감독(%s)? ", oldInfo.getDirector());
-    newInfo.setDirector(keyboard.nextLine());
+    inputStr = keyboard.nextLine();
+    
+    if(inputStr.length() == 0) {
+      newInfo.setDirector(oldInfo.getGenre());
+    } else {
+      newInfo.setDirector(inputStr);;
+    }
     
     System.out.printf("출연(%s)? ", oldInfo.getActor());
-    newInfo.setActor(keyboard.nextLine());
+    inputStr = keyboard.nextLine();
+    
+    if(inputStr.length() == 0) {
+      newInfo.setActor(oldInfo.getGenre());
+    } else {
+      newInfo.setActor(inputStr);
+    }
     
     System.out.printf("관람등급(%s)? ", oldInfo.getKmrb());
-    newInfo.setKmrb(keyboard.nextLine());
+    inputStr = keyboard.nextLine();
+    
+    if(inputStr.length() == 0) {
+      newInfo.setKmrb(oldInfo.getGenre());
+    } else {
+      newInfo.setKmrb(inputStr);
+    }
     
     System.out.printf("개봉일(%s)? ", oldInfo.getOpenDate());
-    newInfo.setOpenDate(Date.valueOf(keyboard.nextLine()));
+    inputStr = keyboard.nextLine();
+    if(inputStr.length() == 0) {
+      newInfo.setOpenDate(oldInfo.getOpenDate());
+    } else {
+      newInfo.setOpenDate(Date.valueOf(inputStr));
+    }
     
     System.out.printf("러닝타임: %d\n", oldInfo.getRunningTime());
-    newInfo.setRunningTime(keyboard.nextInt());
-    keyboard.nextLine();
+    inputStr = keyboard.nextLine();
+    if(inputStr.length() == 0) {
+      newInfo.setRunningTime(oldInfo.getRunningTime());
+    } else {
+      newInfo.setRunningTime(Integer.parseInt(inputStr));
+    }
     
     this.infoList.set(index, newInfo);
     System.out.println("정보가 수정되었습니다.");
   }
   
   public void deleteInfo() {
-    System.out.print("정보 인덱스? ");
-    int index = keyboard.nextInt();
+    System.out.print("번호? ");
+    int no = keyboard.nextInt();
     keyboard.nextLine();
     
-    Info info = this.infoList.get(index);
-    if(info == null) {
-      System.out.println("존재하지 않는 정보 인덱스입니다.");
+    int index = indexOfInfo(no);
+    if(index == -1) {
+      System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
     
@@ -154,5 +195,13 @@ public class InfoHandler {
     System.out.println("정보 인덱스를 삭제했습니다.");
   }
 
+  private int indexOfInfo(int no) {
+    for(int i =0; i < this.infoList.size(); i++) {
+      if(this.infoList.get(i).getNo() == no) {
+        return i;
+      }
+    }
+    return -1;
+  }
 
 }
