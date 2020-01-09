@@ -1,24 +1,18 @@
 package jes.movie.handler;
 
 import java.sql.Date;
-import java.util.Scanner;
 import jes.movie.domain.Member;
-import jes.movie.util.ArrayList;
+import jes.movie.util.LinkedList;
 import jes.movie.util.Prompt;
 
 public class MemberHandler {
 
   public Prompt prompt;
-  ArrayList<Member> memberList;
+  LinkedList<Member> memberList;
 
   public MemberHandler(Prompt prompt) {
     this.prompt = prompt;
-    memberList = new ArrayList<>();
-  }
-
-  public MemberHandler(Prompt prompt, int capacity) {
-    this.prompt = prompt;
-    memberList = new ArrayList<>();
+    memberList = new LinkedList<>();
   }
 
   public void addMember() {
