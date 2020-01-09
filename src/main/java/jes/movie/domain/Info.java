@@ -13,6 +13,56 @@ public class Info {
   private Date openDate;
   private int runningTime;
   
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Info other = (Info) obj;
+    if (actor == null) {
+      if (other.actor != null)
+        return false;
+    } else if (!actor.equals(other.actor))
+      return false;
+    if (director == null) {
+      if (other.director != null)
+        return false;
+    } else if (!director.equals(other.director))
+      return false;
+    if (genre == null) {
+      if (other.genre != null)
+        return false;
+    } else if (!genre.equals(other.genre))
+      return false;
+    if (kmrb == null) {
+      if (other.kmrb != null)
+        return false;
+    } else if (!kmrb.equals(other.kmrb))
+      return false;
+    if (movieTitle == null) {
+      if (other.movieTitle != null)
+        return false;
+    } else if (!movieTitle.equals(other.movieTitle))
+      return false;
+    if (no != other.no)
+      return false;
+    if (openDate == null) {
+      if (other.openDate != null)
+        return false;
+    } else if (!openDate.equals(other.openDate))
+      return false;
+    if (runningTime != other.runningTime)
+      return false;
+    if (summary == null) {
+      if (other.summary != null)
+        return false;
+    } else if (!summary.equals(other.summary))
+      return false;
+    return true;
+  }
   public int getNo() {
     return no;
   }

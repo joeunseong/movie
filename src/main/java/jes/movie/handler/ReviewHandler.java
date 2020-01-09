@@ -4,21 +4,22 @@ import java.sql.Date;
 import java.util.Scanner;
 import jes.movie.domain.Review;
 import jes.movie.util.ArrayList;
+import jes.movie.util.Prompt;
 
 public class ReviewHandler {
 
-  public Scanner keyboard;
+  public Prompt prompt;
 
   ArrayList<Review> reviewList;
 
-  public ReviewHandler(Scanner keyboard) {
-    this.keyboard = keyboard;
+  public ReviewHandler(Prompt prompt) {
+    this.prompt = prompt;
     reviewList = new ArrayList<>();
     
   }
   
-  public ReviewHandler(Scanner keyboard, int capacity) {
-    this.keyboard = keyboard;
+  public ReviewHandler(Prompt prompt, int capacity) {
+    this.prompt = prompt;
     reviewList = new ArrayList<>(capacity);
     
   }
@@ -26,21 +27,13 @@ public class ReviewHandler {
   public void addReview() {
     Review review = new Review();
 
-    System.out.print("번호? ");
-    review.setNo(Integer.parseInt(keyboard.nextLine()));
-
-    System.out.print("영화 제목?");
-    review.setMovieTitle(keyboard.nextLine());
-
-    System.out.print("내용? ");
-    review.setReviewSummary(keyboard.nextLine());
-
+    review.setNo(prompt.inputInt("번호? "));
+    review.setMovieTitle(prompt.inputString("영화 제목? "));
+    review.setReviewSummary(prompt.inputString("내용? "));
     review.setUpdateDay(new Date(System.currentTimeMillis()));
     review.setViewCount(0);
-    
     reviewList.add(review);
     System.out.println("저장되었습니다.");
-
   }
 
   public void listReview() {
@@ -54,12 +47,7 @@ public class ReviewHandler {
   }
 
   public void detailReview() {
-    System.out.print("번호? ");
-    int no = keyboard.nextInt();
-    keyboard.nextLine();
-    
-    int index = indexOfReview(no);
-    
+    int index = indexOfReview(prompt.inputInt("번호? "));
     if(index == -1) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
@@ -73,52 +61,35 @@ public class ReviewHandler {
   }
   
   public void updateReview() {
-    System.out.print("번호? ");
-    int no = keyboard.nextInt();
-    keyboard.nextLine();
-
-    int index = indexOfReview(no);
-    
+    int index = indexOfReview(prompt.inputInt("번호? "));
     if(index == -1) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
     
     Review oldReview = this.reviewList.get(index);
-    String inputStr = null;
     Review newReview = new Review();
     newReview.setNo(oldReview.getNo());
     
-    System.out.printf("영화제목(%s)? ", oldReview.getMovieTitle());
-    inputStr = keyboard.nextLine();
-    if(inputStr.length() == 0) {
-      newReview.setMovieTitle(oldReview.getMovieTitle());
-    } else {
-      newReview.setMovieTitle(inputStr);
-    }
+    newReview.setMovieTitle(prompt.inputString(String.format("영화제목(%s)? ", oldReview.getMovieTitle()),
+          oldReview.getMovieTitle()));
     
-    System.out.printf("리뷰 내용? ");
-    inputStr = keyboard.nextLine();
-    if(inputStr.length() == 0) {
-      newReview.setReviewSummary(oldReview.getMovieTitle());
-    } else {
-      newReview.setReviewSummary(inputStr);
-    }
+    newReview.setReviewSummary(prompt.inputString("리뷰 내용? ", oldReview.getReviewSummary()));
     
     newReview.setUpdateDay(new Date(System.currentTimeMillis()));
     newReview.setViewCount(0);
     
-    this.reviewList.set(index, newReview);
+    if(oldReview.equals(newReview)) {
+      System.out.println("리뷰가 수정이 취소되었습니다.");
+      return;
+    }
     
+    this.reviewList.set(index, newReview);
     System.out.println("리뷰가 수정되었습니다.");
   }
   
   public void deleteReview() {
-    System.out.print("번호? ");
-    int no = keyboard.nextInt();
-    keyboard.nextLine();
-
-    int index = indexOfReview(no);
+    int index = indexOfReview(prompt.inputInt("번호? "));
     if(index == -1) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;

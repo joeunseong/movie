@@ -1,59 +1,37 @@
 package jes.movie.handler;
 
-import java.sql.Date;
-import java.util.Scanner;
 import jes.movie.domain.Info;
 import jes.movie.util.ArrayList;
+import jes.movie.util.Prompt;
 
 public class InfoHandler {
 
-  public Scanner keyboard;
-
+  public Prompt prompt;
+  
   ArrayList<Info> infoList;
 
-  public InfoHandler(Scanner keyboard) {
-    this.keyboard = keyboard;
+  public InfoHandler(Prompt prompt) {
+    this.prompt = prompt;
     infoList = new ArrayList<>();
   }
 
-  public InfoHandler(Scanner keyboard, int capacity) {
-    this.keyboard = keyboard;
+  public InfoHandler(Prompt prompt, int capacity) {
+    this.prompt = prompt;
     infoList = new ArrayList<>(capacity);
   }
 
   public void addInfo() {
     Info info = new Info();
 
-    System.out.print("번호? ");
-    info.setNo(keyboard.nextInt());
-
-    keyboard.nextLine();
-
-    System.out.print("영화명? ");
-    info.setMovieTitle(keyboard.nextLine());
-
-    System.out.print("장르? ");
-    info.setGenre(keyboard.nextLine());
-
-    System.out.print("줄거리? ");
-    info.setSummary(keyboard.nextLine());
-
-    System.out.print("감독? ");
-    info.setDirector(keyboard.nextLine());
-
-    System.out.print("출연? ");
-    info.setActor(keyboard.nextLine());
-
-    System.out.print("관람등급? ");
-    info.setKmrb(keyboard.nextLine());
-
-    System.out.print("개봉일? ");
-    info.setOpenDate(Date.valueOf(keyboard.nextLine()));
-
-    System.out.print("러닝타임? ");
-    info.setRunningTime(keyboard.nextInt());
-    keyboard.nextLine();
-
+    info.setNo(prompt.inputInt("번호? "));
+    info.setMovieTitle(prompt.inputString("영화명? "));
+    info.setGenre(prompt.inputString("장르? "));
+    info.setSummary(prompt.inputString("줄거리? "));
+    info.setDirector(prompt.inputString("감독? "));
+    info.setActor(prompt.inputString("출연? "));
+    info.setKmrb(prompt.inputString("관람등급? "));
+    info.setOpenDate(prompt.inputDate("개봉일? "));
+    info.setRunningTime(prompt.inputInt("러닝타임? "));
     infoList.add(info);
     System.out.println("등록되었습니다.");
   }
@@ -69,11 +47,7 @@ public class InfoHandler {
   }
   
   public void detailInfo() {
-    System.out.print("번호? ");
-    int no = keyboard.nextInt();
-    keyboard.nextLine();
-    
-    int index = indexOfInfo(no);
+    int index = indexOfInfo(prompt.inputInt("번호? "));
     if(index == -1) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
@@ -91,89 +65,43 @@ public class InfoHandler {
   }
   
   public void updateInfo() {
-    System.out.print("번호? ");
-    int no = keyboard.nextInt();
-    keyboard.nextLine();
-    
-    int index = indexOfInfo(no);
+    int index = indexOfInfo(prompt.inputInt("번호? "));
     if(index == -1) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
     
     Info oldInfo = this.infoList.get(index);
-    String inputStr = null;
     Info newInfo = new Info();
-    
-    System.out.printf("영화명(%s)?", oldInfo.getMovieTitle());
-    inputStr = keyboard.nextLine();
-    
-    if(inputStr.length() == 0) {
-      newInfo.setMovieTitle(oldInfo.getMovieTitle());
-    } else {
-      newInfo.setMovieTitle(inputStr);
-    }
-    
     newInfo.setNo(oldInfo.getNo());
+  
+    newInfo.setMovieTitle(prompt.inputString(String.format("영화명(%s)", oldInfo.getMovieTitle()),
+        oldInfo.getMovieTitle()));
     
-    System.out.printf("장르(%s)? ", oldInfo.getGenre());
-    inputStr = keyboard.nextLine();
+    newInfo.setGenre(prompt.inputString(String.format("장르(%s)", oldInfo.getGenre()),
+          oldInfo.getGenre()));
+      
+    newInfo.setSummary(prompt.inputString(String.format("줄거리", oldInfo.getSummary()),
+          oldInfo.getSummary()));
     
-    if(inputStr.length() == 0) {
-      newInfo.setGenre(oldInfo.getGenre());
-    } else {
-      newInfo.setGenre(inputStr);
-    }
+    newInfo.setDirector(prompt.inputString(String.format("감독(%s)? ", oldInfo.getDirector()),
+          oldInfo.getDirector()));
     
-    System.out.printf("줄거리(%s)? ", oldInfo.getSummary());
-    inputStr = keyboard.nextLine();
-    if(inputStr.length() == 0) {
-      newInfo.setSummary(oldInfo.getSummary());
-    } else {
-      newInfo.setSummary(inputStr);
-    }
+    newInfo.setActor(prompt.inputString(String.format("출연(%s)? ", oldInfo.getActor()),
+        oldInfo.getActor()));
     
-    System.out.printf("감독(%s)? ", oldInfo.getDirector());
-    inputStr = keyboard.nextLine();
+    newInfo.setKmrb(prompt.inputString(String.format("관람등급(%s)? ", oldInfo.getKmrb()),
+        oldInfo.getKmrb()));
     
-    if(inputStr.length() == 0) {
-      newInfo.setDirector(oldInfo.getGenre());
-    } else {
-      newInfo.setDirector(inputStr);;
-    }
+    newInfo.setOpenDate(prompt.inputDate(String.format("개봉일(%s)? ", oldInfo.getOpenDate()),
+          oldInfo.getOpenDate()));
     
-    System.out.printf("출연(%s)? ", oldInfo.getActor());
-    inputStr = keyboard.nextLine();
+    newInfo.setRunningTime(prompt.inputInt(String.format("러닝타임(%s)", oldInfo.getRunningTime()),
+        oldInfo.getRunningTime()));
     
-    if(inputStr.length() == 0) {
-      newInfo.setActor(oldInfo.getGenre());
-    } else {
-      newInfo.setActor(inputStr);
-    }
-    
-    System.out.printf("관람등급(%s)? ", oldInfo.getKmrb());
-    inputStr = keyboard.nextLine();
-    
-    if(inputStr.length() == 0) {
-      newInfo.setKmrb(oldInfo.getGenre());
-    } else {
-      newInfo.setKmrb(inputStr);
-    }
-    
-    System.out.printf("개봉일(%s)? ", oldInfo.getOpenDate());
-    inputStr = keyboard.nextLine();
-    if(inputStr.length() == 0) {
-      newInfo.setOpenDate(oldInfo.getOpenDate());
-    } else {
-      newInfo.setOpenDate(Date.valueOf(inputStr));
-    }
-    
-    System.out.printf("러닝타임: %d\n", oldInfo.getRunningTime());
-    inputStr = keyboard.nextLine();
-    if(inputStr.length() == 0) {
-      newInfo.setRunningTime(oldInfo.getRunningTime());
-    } else {
-      newInfo.setRunningTime(Integer.parseInt(inputStr));
+    if(oldInfo.equals(newInfo)) {
+      System.out.println("정보 변경을 취소하였습니다.");
+      return;
     }
     
     this.infoList.set(index, newInfo);
@@ -181,11 +109,7 @@ public class InfoHandler {
   }
   
   public void deleteInfo() {
-    System.out.print("번호? ");
-    int no = keyboard.nextInt();
-    keyboard.nextLine();
-    
-    int index = indexOfInfo(no);
+    int index = indexOfInfo(prompt.inputInt("번호? "));
     if(index == -1) {
       System.out.println("해당 번호의 게시글이 없습니다.");
       return;
@@ -203,5 +127,4 @@ public class InfoHandler {
     }
     return -1;
   }
-
 }

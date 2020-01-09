@@ -11,6 +11,44 @@ public class Member {
   private String tel;
   private Date registerDate;
   
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Member other = (Member) obj;
+    if (email == null) {
+      if (other.email != null)
+        return false;
+    } else if (!email.equals(other.email))
+      return false;
+    if (name == null) {
+      if (other.name != null)
+        return false;
+    } else if (!name.equals(other.name))
+      return false;
+    if (no != other.no)
+      return false;
+    if (password == null) {
+      if (other.password != null)
+        return false;
+    } else if (!password.equals(other.password))
+      return false;
+    if (photo == null) {
+      if (other.photo != null)
+        return false;
+    } else if (!photo.equals(other.photo))
+      return false;
+    if (tel == null) {
+      if (other.tel != null)
+        return false;
+    } else if (!tel.equals(other.tel))
+      return false;
+    return true;
+  }
   public int getNo() {
     return no;
   }

@@ -5,15 +5,17 @@ import java.util.Scanner;
 import jes.movie.handler.InfoHandler;
 import jes.movie.handler.MemberHandler;
 import jes.movie.handler.ReviewHandler;
+import jes.movie.util.Prompt;
 
 public class App {
   static Scanner keyboard = new Scanner(System.in);
 
-
   public static void main(String[] args) {
-    ReviewHandler reviewHandler = new ReviewHandler(keyboard);
-    InfoHandler infoHandler = new InfoHandler(keyboard);
-    MemberHandler memberHandler = new MemberHandler(keyboard);
+    Prompt prompt = new Prompt(keyboard);
+    
+    ReviewHandler reviewHandler = new ReviewHandler(prompt);
+    InfoHandler infoHandler = new InfoHandler(prompt);
+    MemberHandler memberHandler = new MemberHandler(prompt);
 
     String command;
 

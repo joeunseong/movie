@@ -9,6 +9,31 @@ public class Review {
   private Date updateDay;
   private int viewCount;
   
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Review other = (Review) obj;
+    if (movieTitle == null) {
+      if (other.movieTitle != null)
+        return false;
+    } else if (!movieTitle.equals(other.movieTitle))
+      return false;
+    if (no != other.no)
+      return false;
+    if (reviewSummary == null) {
+      if (other.reviewSummary != null)
+        return false;
+    } else if (!reviewSummary.equals(other.reviewSummary))
+      return false;
+    if (viewCount != other.viewCount)
+      return false;
+    return true;
+  }
   public int getNo() {
     return no;
   }
