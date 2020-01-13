@@ -1,4 +1,3 @@
-
 package jes.movie;
 
 import java.util.Scanner;
@@ -6,9 +5,11 @@ import jes.movie.handler.InfoHandler;
 import jes.movie.handler.MemberHandler;
 import jes.movie.handler.ReviewHandler;
 import jes.movie.util.Prompt;
+import jes.movie.util.Stack;
 
 public class App {
   static Scanner keyboard = new Scanner(System.in);
+  static Stack<String> commandStack = new Stack<>();
 
   public static void main(String[] args) {
     Prompt prompt = new Prompt(keyboard);
@@ -18,10 +19,17 @@ public class App {
     MemberHandler memberHandler = new MemberHandler(prompt);
 
     String command;
+    
 
     do {
       System.out.print("\n명령> ");
       command = keyboard.nextLine();
+      
+      if (command.length() == 0)
+        continue;
+      
+      commandStack.push(command);
+      
       switch (command) {
         case "/info/add":
           infoHandler.addInfo();
@@ -83,6 +91,10 @@ public class App {
           reviewHandler.deleteReview();
           break;
 
+        case "history":
+          printCommandHistory();
+          break;
+        
         default:
           if (!command.equalsIgnoreCase("quit")) {
             System.out.println("실행할 수 없는 명령입니다.");
@@ -93,6 +105,24 @@ public class App {
 
     keyboard.close();
   }
+
+  private static void printCommandHistory() {
+ Stack<String> historyStack = (Stack<String>) commandStack.clone();
+    
+    int count = 0;
+    while (!historyStack.empty()) {
+      System.out.println(historyStack.pop());
+      count++;
+      if ((count % 5) == 0) {
+        System.out.print(":");
+        String str = keyboard.nextLine();
+        if (str.equalsIgnoreCase("q")) {
+          break;
+        }
+      }
+    }
+  }
 }
+
 
 
