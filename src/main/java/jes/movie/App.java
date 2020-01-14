@@ -5,11 +5,13 @@ import jes.movie.handler.InfoHandler;
 import jes.movie.handler.MemberHandler;
 import jes.movie.handler.ReviewHandler;
 import jes.movie.util.Prompt;
+import jes.movie.util.Queue;
 import jes.movie.util.Stack;
 
 public class App {
   static Scanner keyboard = new Scanner(System.in);
   static Stack<String> commandStack = new Stack<>();
+  static Queue<String> commandQueue = new Queue<>();
 
   public static void main(String[] args) {
     Prompt prompt = new Prompt(keyboard);
@@ -29,6 +31,7 @@ public class App {
         continue;
       
       commandStack.push(command);
+      commandQueue.offer(command);
       
       switch (command) {
         case "/info/add":
@@ -94,6 +97,10 @@ public class App {
         case "history":
           printCommandHistory();
           break;
+          
+        case "history2":
+          printCommandHistory2();
+          break;
         
         default:
           if (!command.equalsIgnoreCase("quit")) {
@@ -104,6 +111,23 @@ public class App {
     System.out.println("종료");
 
     keyboard.close();
+  }
+
+  private static void printCommandHistory2() {
+    Queue<String> historyQueue = commandQueue.clone();
+    int count = 0;
+    
+    while (historyQueue.size() > 0) {
+      System.out.println(historyQueue.poll());
+      
+      if ((++count % 5) == 0) {
+        System.out.print(":");
+        String str = keyboard.nextLine();
+        if (str.equalsIgnoreCase("q")) {
+          break;
+        }
+      }
+    }
   }
 
   private static void printCommandHistory() {
