@@ -2,18 +2,18 @@ package jes.movie.handler;
 
 import java.sql.Date;
 import jes.movie.domain.Review;
-import jes.movie.util.LinkedList;
+import jes.movie.util.AbstractList;
 import jes.movie.util.Prompt;
 
 public class ReviewHandler {
 
   public Prompt prompt;
 
-  LinkedList<Review> reviewList;
+  AbstractList<Review> reviewList;
 
-  public ReviewHandler(Prompt prompt) {
+  public ReviewHandler(Prompt prompt, AbstractList<Review> list) {
     this.prompt = prompt;
-    reviewList = new LinkedList<>();
+    reviewList = list;
     
   }
 

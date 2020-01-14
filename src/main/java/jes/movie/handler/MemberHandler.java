@@ -2,17 +2,17 @@ package jes.movie.handler;
 
 import java.sql.Date;
 import jes.movie.domain.Member;
-import jes.movie.util.LinkedList;
+import jes.movie.util.AbstractList;
 import jes.movie.util.Prompt;
 
 public class MemberHandler {
 
   public Prompt prompt;
-  LinkedList<Member> memberList;
+  AbstractList<Member> memberList;
 
-  public MemberHandler(Prompt prompt) {
+  public MemberHandler(Prompt prompt, AbstractList<Member> list) {
     this.prompt = prompt;
-    memberList = new LinkedList<>();
+    memberList = list;
   }
 
   public void addMember() {

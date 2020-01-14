@@ -1,18 +1,18 @@
 package jes.movie.handler;
 
 import jes.movie.domain.Info;
-import jes.movie.util.LinkedList;
+import jes.movie.util.AbstractList;
 import jes.movie.util.Prompt;
 
 public class InfoHandler {
 
   public Prompt prompt;
   
-  LinkedList<Info> infoList;
+  AbstractList<Info> infoList;
 
-  public InfoHandler(Prompt prompt) {
+  public InfoHandler(Prompt prompt, AbstractList<Info> list) {
     this.prompt = prompt;
-    infoList = new LinkedList<>();
+    infoList = list;
   }
 
   public void addInfo() {

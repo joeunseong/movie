@@ -4,7 +4,7 @@ import java.util.Arrays;
 import jes.movie.domain.Info;
 import jes.movie.domain.Review;
 
-public class ArrayList<E> {
+public class ArrayList<E> extends AbstractList<E>{
   static final int DEFAULT_SIZE = 100;
 
   int size = 0;
@@ -21,6 +21,7 @@ public class ArrayList<E> {
       this.list = new Object[capacity];
   }
 
+  @Override
   public void add(E obj) {
     if (this.size == this.list.length) {
       int oldCapacity = this.list.length;
@@ -85,5 +86,32 @@ public class ArrayList<E> {
   public int size() {
     return this.size;
   }
+  @Override
+  public void add(int index, E value) {
+    if (index < 0 || index >= this.size)
+      return;
+
+    if (this.size == this.list.length) {
+      grow();
+    }
+
+    for (int i = size - 1; i >= index; i--)
+      this.list[i + 1] = this.list[i];
+
+    this.list[index] = value;
+    this.size++;
+  }
+  
+  private Object[] grow() {
+    return this.list = Arrays.copyOf(this.list, 
+        newCapacity());
+  }
+  
+  private int newCapacity() {
+    int oldSize = this.list.length;
+    return oldSize + (oldSize >> 1);
+  }
+  
+  
 
 }

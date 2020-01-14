@@ -1,9 +1,14 @@
 package jes.movie;
 
 import java.util.Scanner;
+import jes.movie.domain.Info;
+import jes.movie.domain.Member;
+import jes.movie.domain.Review;
 import jes.movie.handler.InfoHandler;
 import jes.movie.handler.MemberHandler;
 import jes.movie.handler.ReviewHandler;
+import jes.movie.util.ArrayList;
+import jes.movie.util.LinkedList;
 import jes.movie.util.Prompt;
 import jes.movie.util.Queue;
 import jes.movie.util.Stack;
@@ -16,9 +21,14 @@ public class App {
   public static void main(String[] args) {
     Prompt prompt = new Prompt(keyboard);
     
-    ReviewHandler reviewHandler = new ReviewHandler(prompt);
-    InfoHandler infoHandler = new InfoHandler(prompt);
-    MemberHandler memberHandler = new MemberHandler(prompt);
+    LinkedList<Review> reviewList = new LinkedList<>();
+    ReviewHandler reviewHandler = new ReviewHandler(prompt, reviewList);
+    
+    ArrayList<Info> InfoList = new ArrayList<>();
+    InfoHandler infoHandler = new InfoHandler(prompt, InfoList);
+    
+    LinkedList<Member> memberList = new LinkedList<>();
+    MemberHandler memberHandler = new MemberHandler(prompt, memberList);
 
     String command;
     
