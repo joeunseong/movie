@@ -2,15 +2,16 @@ package jes.movie.handler;
 
 import java.sql.Date;
 import jes.movie.domain.Member;
-import jes.movie.util.AbstractList;
+import jes.movie.util.Iterator;
+import jes.movie.util.List;
 import jes.movie.util.Prompt;
 
 public class MemberHandler {
 
   public Prompt prompt;
-  AbstractList<Member> memberList;
+  List<Member> memberList;
 
-  public MemberHandler(Prompt prompt, AbstractList<Member> list) {
+  public MemberHandler(Prompt prompt, List<Member> list) {
     this.prompt = prompt;
     memberList = list;
   }
@@ -30,9 +31,11 @@ public class MemberHandler {
   }
 
   public void listMember() {
-    Member[] arr = memberList.toArray(new Member[] {});
-    for (Member m : arr) {
-      System.out.printf("%d, %s, %s, %s, %s\n", m.getNo(), m.getName(), m.getEmail(), m.getTel(),
+    Iterator<Member> iterator = memberList.iterator();
+    while (iterator.hasNext()) {
+      Member m = iterator.next();
+      System.out.printf("%d, %s, %s, %s, %s\n", 
+          m.getNo(), m.getName(), m.getEmail(), m.getTel(),
           m.getRegisterDate());
     }
   }

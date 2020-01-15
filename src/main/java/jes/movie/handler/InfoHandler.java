@@ -1,23 +1,22 @@
 package jes.movie.handler;
 
 import jes.movie.domain.Info;
-import jes.movie.util.AbstractList;
+import jes.movie.util.Iterator;
+import jes.movie.util.List;
 import jes.movie.util.Prompt;
 
 public class InfoHandler {
-
-  public Prompt prompt;
   
-  AbstractList<Info> infoList;
+  public Prompt prompt;
+  List<Info> infoList;
 
-  public InfoHandler(Prompt prompt, AbstractList<Info> list) {
+  public InfoHandler(Prompt prompt, List<Info> list) {
     this.prompt = prompt;
     infoList = list;
   }
 
   public void addInfo() {
     Info info = new Info();
-
     info.setNo(prompt.inputInt("번호? "));
     info.setMovieTitle(prompt.inputString("영화명? "));
     info.setGenre(prompt.inputString("장르? "));
@@ -32,8 +31,9 @@ public class InfoHandler {
   }
 
   public void listInfo() {
-    Info[] arr = this.infoList.toArray(new Info[this.infoList.size()]);
-    for (Info in : arr) {
+    Iterator<Info> iterator = infoList.iterator();
+    while(iterator.hasNext()) {
+      Info in = iterator.next();
       System.out.printf("%d, %s, %s, %s, %s, %s, %s, %s, %d분\n", 
           in.getNo(), in.getMovieTitle(), in.getGenre(), in.getSummary(), 
           in.getDirector(), in.getActor(), in.getKmrb(),

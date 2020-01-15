@@ -8,6 +8,7 @@ import jes.movie.handler.InfoHandler;
 import jes.movie.handler.MemberHandler;
 import jes.movie.handler.ReviewHandler;
 import jes.movie.util.ArrayList;
+import jes.movie.util.Iterator;
 import jes.movie.util.LinkedList;
 import jes.movie.util.Prompt;
 import jes.movie.util.Queue;
@@ -32,7 +33,6 @@ public class App {
 
     String command;
     
-
     do {
       System.out.print("\n명령> ");
       command = keyboard.nextLine();
@@ -105,11 +105,11 @@ public class App {
           break;
 
         case "history":
-          printCommandHistory();
+          printCommandHistory(commandStack.iterator());
           break;
           
         case "history2":
-          printCommandHistory2();
+          printCommandHistory(commandQueue.iterator());
           break;
         
         default:
@@ -123,29 +123,10 @@ public class App {
     keyboard.close();
   }
 
-  private static void printCommandHistory2() {
-    Queue<String> historyQueue = commandQueue.clone();
+  private static void printCommandHistory(Iterator<String> iterator) {
     int count = 0;
-    
-    while (historyQueue.size() > 0) {
-      System.out.println(historyQueue.poll());
-      
-      if ((++count % 5) == 0) {
-        System.out.print(":");
-        String str = keyboard.nextLine();
-        if (str.equalsIgnoreCase("q")) {
-          break;
-        }
-      }
-    }
-  }
-
-  private static void printCommandHistory() {
- Stack<String> historyStack = (Stack<String>) commandStack.clone();
-    
-    int count = 0;
-    while (!historyStack.empty()) {
-      System.out.println(historyStack.pop());
+    while (iterator.hasNext()) {
+      System.out.println(iterator.next());
       count++;
       if ((count % 5) == 0) {
         System.out.print(":");

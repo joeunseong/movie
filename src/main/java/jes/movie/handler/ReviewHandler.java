@@ -2,16 +2,17 @@ package jes.movie.handler;
 
 import java.sql.Date;
 import jes.movie.domain.Review;
-import jes.movie.util.AbstractList;
+import jes.movie.util.Iterator;
+import jes.movie.util.List;
 import jes.movie.util.Prompt;
 
 public class ReviewHandler {
 
   public Prompt prompt;
 
-  AbstractList<Review> reviewList;
+  List<Review> reviewList;
 
-  public ReviewHandler(Prompt prompt, AbstractList<Review> list) {
+  public ReviewHandler(Prompt prompt,List<Review> list) {
     this.prompt = prompt;
     reviewList = list;
     
@@ -30,9 +31,9 @@ public class ReviewHandler {
   }
 
   public void listReview() {
-    Review[] arr = new Review[this.reviewList.size()];
-    this.reviewList.toArray(arr);
-    for (Review r : arr) {
+    Iterator<Review> iterator = reviewList.iterator();
+    while (iterator.hasNext()) {
+      Review r = iterator.next();
       System.out.printf("%d, %s, %s, %s, %s\n", 
           r.getNo(), r.getMovieTitle(), r.getReviewSummary(), 
           r.getUpdateDay(), r.getViewCount());
