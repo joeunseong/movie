@@ -13,7 +13,7 @@ public abstract class AbstractList<E> implements List<E> {
   }
   
 
-public class ListIterator<E> implements Iterator<E> {
+ static class ListIterator<E> implements Iterator<E> {
   List<E> list;
   int cursor;
   

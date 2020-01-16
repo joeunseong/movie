@@ -56,7 +56,7 @@ public class Queue<E> extends LinkedList<E> implements Cloneable {
   }
 
 
-  public class QueueIterator<E> implements Iterator<E> {
+  static class QueueIterator<E> implements Iterator<E> {
     Queue<E> queue;
 
     public QueueIterator(Queue<E> queue) {

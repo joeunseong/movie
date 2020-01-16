@@ -63,7 +63,7 @@ public class Stack<E> implements Cloneable{
     return new StackIterator<E>(this);
   }
   
-  public class StackIterator<E> implements Iterator<E> {
+  static class StackIterator<E> implements Iterator<E> {
     Stack<E> stack;
     int cursor;
     
