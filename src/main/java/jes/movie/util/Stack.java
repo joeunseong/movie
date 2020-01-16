@@ -6,23 +6,23 @@ public class Stack<E> implements Cloneable{
   private static final int DEFAULT_CAPACITY = 10;
   Object[] elementData;
   int size;
-  
+
   public Stack() {
     this.elementData = new Object[DEFAULT_CAPACITY];
     this.size = 0;
   }
-  
+
   public void push(E value) {
     if(elementData.length == this.size) {
       grow();
     }
     this.elementData[size] = value;
   }
-  
+
   public void grow() {
     this.elementData = Arrays.copyOf(elementData, newCapacity());
   }
-  
+
   private int newCapacity() {
     int oldCapacity = elementData.length;
     return oldCapacity + (oldCapacity >> 1);
@@ -37,11 +37,11 @@ public class Stack<E> implements Cloneable{
     this.elementData[size] = null;
     return value;
   }
-  
+
   public boolean empty() {
     return this.size == 0;
   }
-  
+
   @SuppressWarnings("unchecked")
   @Override
   public Stack<E> clone() {
@@ -58,29 +58,31 @@ public class Stack<E> implements Cloneable{
       return null;
     }
   }
-  
+
   public Iterator<E> iterator() {
-    return new StackIterator<E>(this);
+    // this = 인스턴스 주소;
+    // inner class 를 생성하려면 바깥 클래스의 인스턴스 주소를 앞쪽에 줘야 한다.
+    return this.new StackIterator<E>();
   }
   
-  static class StackIterator<E> implements Iterator<E> {
-    Stack<E> stack;
-    int cursor;
+  // non-static nested class = inner class
+  class StackIterator<T> implements Iterator<T> {
     
-    public StackIterator(Stack<E> stack) {
-      this.stack = stack.clone();
+    Stack<T> stack;
+    
+    @SuppressWarnings("unchecked")
+    public StackIterator() {
+      this.stack = (Stack<T>) Stack.this.clone();
     }
-
+    
     @Override
     public boolean hasNext() {
       return !stack.empty();
     }
-
+    
     @Override
-    public E next() {
+    public T next() {
       return stack.pop();
     }
-    
-
   }
 }
