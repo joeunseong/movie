@@ -4,11 +4,11 @@ public class Queue<E> extends LinkedList<E> implements Cloneable {
   public void offer(E value) {
     this.add(value);
   }
-  
+
   public E poll() {
     return this.remove(0);
   }
-  
+
   /*
   @Override
   public Queue clone() {
@@ -25,14 +25,14 @@ public class Queue<E> extends LinkedList<E> implements Cloneable {
       // => 즉 'deep copy'를 수행해야 한다.
       //
       return (Queue) super.clone();
-      
+
     } catch (CloneNotSupportedException ex) {
       System.out.println(ex);
       return null;
     }
   }
-  */
-  
+   */
+
   @Override
   public Queue<E> clone() {
     // 'deep copy' 수행
@@ -44,7 +44,7 @@ public class Queue<E> extends LinkedList<E> implements Cloneable {
     //    기존 Queue에 저장된 값을 꺼내서 새 Queue에 저장해야 한다.
     //
     Queue<E> temp = new Queue<E>();
-    
+
     for (int i = 0; i < this.size(); i++) {
       temp.offer(this.get(i));
     }
@@ -53,5 +53,24 @@ public class Queue<E> extends LinkedList<E> implements Cloneable {
 
   public Iterator<E> iterator() {
     return new QueueIterator<E>(this);
+  }
+
+
+  public class QueueIterator<E> implements Iterator<E> {
+    Queue<E> queue;
+
+    public QueueIterator(Queue<E> queue) {
+      this.queue = queue.clone();
+    }
+
+    @Override
+    public boolean hasNext() {
+      return queue.size() > 0;
+    }
+
+    @Override
+    public E next() {
+      return queue.poll();
+    }
   }
 }
