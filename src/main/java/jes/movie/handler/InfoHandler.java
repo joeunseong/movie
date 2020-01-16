@@ -1,8 +1,8 @@
 package jes.movie.handler;
 
+import java.util.Iterator;
+import java.util.List;
 import jes.movie.domain.Info;
-import jes.movie.util.Iterator;
-import jes.movie.util.List;
 import jes.movie.util.Prompt;
 
 public class InfoHandler {
