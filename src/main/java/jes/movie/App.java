@@ -3,6 +3,7 @@ package jes.movie;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -10,9 +11,22 @@ import java.util.Scanner;
 import jes.movie.domain.Info;
 import jes.movie.domain.Member;
 import jes.movie.domain.Review;
-import jes.movie.handler.InfoHandler;
-import jes.movie.handler.MemberHandler;
-import jes.movie.handler.ReviewHandler;
+import jes.movie.handler.Command;
+import jes.movie.handler.InfoAddCommand;
+import jes.movie.handler.InfoDeleteCommand;
+import jes.movie.handler.InfoDetailCommand;
+import jes.movie.handler.InfoListCommand;
+import jes.movie.handler.InfoUpdateCommand;
+import jes.movie.handler.MemberAddCommand;
+import jes.movie.handler.MemberDeleteCommand;
+import jes.movie.handler.MemberDetailCommand;
+import jes.movie.handler.MemberListCommand;
+import jes.movie.handler.MemberUpdateCommand;
+import jes.movie.handler.ReviewAddCommand;
+import jes.movie.handler.ReviewDeleteCommand;
+import jes.movie.handler.ReviewDetailCommand;
+import jes.movie.handler.ReviewListCommand;
+import jes.movie.handler.ReviewUpdateCommand;
 import jes.movie.util.Prompt;
 
 public class App {
@@ -22,105 +36,61 @@ public class App {
 
   public static void main(String[] args) {
     Prompt prompt = new Prompt(keyboard);
-    
+    HashMap<String, Command> commandMap = new HashMap<>();
+
     LinkedList<Review> reviewList = new LinkedList<>();
-    ReviewHandler reviewHandler = new ReviewHandler(prompt, reviewList);
-    
+    commandMap.put("/review/add", new ReviewAddCommand(prompt, reviewList));
+    commandMap.put("/review/detail", new ReviewDetailCommand(prompt, reviewList));
+    commandMap.put("/review/delete", new ReviewDeleteCommand(prompt, reviewList));
+    commandMap.put("/review/list", new ReviewListCommand(reviewList));
+    commandMap.put("/review/update", new ReviewUpdateCommand(prompt, reviewList));
+
     ArrayList<Info> InfoList = new ArrayList<>();
-    InfoHandler infoHandler = new InfoHandler(prompt, InfoList);
-    
+    commandMap.put("/info/add", new InfoAddCommand(prompt, InfoList));
+    commandMap.put("/info/delete", new InfoDeleteCommand(prompt, InfoList));
+    commandMap.put("/info/detail", new InfoDetailCommand(prompt, InfoList));
+    commandMap.put("/info/update", new InfoUpdateCommand(prompt, InfoList));
+    commandMap.put("/info/list", new InfoListCommand(InfoList));
+
     LinkedList<Member> memberList = new LinkedList<>();
-    MemberHandler memberHandler = new MemberHandler(prompt, memberList);
+    commandMap.put("/member/add", new MemberAddCommand(prompt, memberList));
+    commandMap.put("/member/delete", new MemberDeleteCommand(prompt, memberList));
+    commandMap.put("/member/detail", new MemberDetailCommand(prompt, memberList));
+    commandMap.put("/member/list", new MemberListCommand(memberList));
+    commandMap.put("/member/update", new MemberUpdateCommand(prompt, memberList));
 
     String command;
-    
-    do {
+
+    while (true) {
       System.out.print("\n명령> ");
       command = keyboard.nextLine();
-      
+
+      if (command.equals("quit")) {
+        System.out.println("종료");
+        break;
+      } else if (command.equals("history")) {
+        printCommandHistory(commandStack.iterator());
+        continue;
+      } else if (command.equals("history2")) {
+        printCommandHistory(commandQueue.iterator());
+        continue;
+      }
+
       if (command.length() == 0)
         continue;
-      
+
       commandStack.push(command);
+
       commandQueue.offer(command);
-      
-      switch (command) {
-        case "/info/add":
-          infoHandler.addInfo();
-          break;
 
-        case "/info/list":
-          infoHandler.listInfo();
-          break;
+      Command commandHandler = commandMap.get(command);
 
-        case "/info/detail":
-          infoHandler.detailInfo();
-          break;
-
-        case "/info/update":
-          infoHandler.updateInfo();
-          break;
-          
-        case "/info/delete":
-          infoHandler.deleteInfo();
-          break;
-          
-        case "/member/add":
-          memberHandler.addMember();
-          break;
-
-        case "/member/list":
-          memberHandler.listMember();
-          break;
-
-        case "/member/detail":
-          memberHandler.detailMember();;
-          break;
-          
-        case "/member/update":
-          memberHandler.updateMember();;
-          break;
-          
-        case "/member/delete":
-          memberHandler.deleteMember();
-          break;
-
-        case "/review/add":
-          reviewHandler.addReview();
-          break;
-
-        case "/review/list":
-          reviewHandler.listReview();
-          break;
-
-        case "/review/detail":
-          reviewHandler.detailReview();
-          break;
-          
-        case "/review/update":
-          reviewHandler.updateReview();
-          break;
-          
-        case "/review/delete":
-          reviewHandler.deleteReview();
-          break;
-
-        case "history":
-          printCommandHistory(commandStack.iterator());
-          break;
-          
-        case "history2":
-          printCommandHistory(commandQueue.iterator());
-          break;
-        
-        default:
-          if (!command.equalsIgnoreCase("quit")) {
-            System.out.println("실행할 수 없는 명령입니다.");
-          }
+      if (commandHandler != null) {
+        commandHandler.excute();
+      } else {
+        System.out.println("실행할 수 없는 명령입니다.");
       }
-    } while (!command.equalsIgnoreCase("quit"));
-    System.out.println("종료");
-
+    }
     keyboard.close();
   }
 
@@ -139,6 +109,5 @@ public class App {
     }
   }
 }
-
 
 
