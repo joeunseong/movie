@@ -1,5 +1,11 @@
 package jes.movie;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -33,9 +39,16 @@ public class App {
   static Scanner keyboard = new Scanner(System.in);
   static Deque<String> commandStack = new ArrayDeque<>();
   static Queue<String> commandQueue = new LinkedList<>();
+
   static LinkedList<Review> reviewList = new LinkedList<>();
+  static ArrayList<Info> infoList = new ArrayList<>();
+  static LinkedList<Member> memberList = new LinkedList<>();
 
   public static void main(String[] args) {
+    loadReviewData();
+    loadMemberData();
+    loadInfoData();
+
     Prompt prompt = new Prompt(keyboard);
     HashMap<String, Command> commandMap = new HashMap<>();
 
@@ -45,14 +58,12 @@ public class App {
     commandMap.put("/review/list", new ReviewListCommand(reviewList));
     commandMap.put("/review/update", new ReviewUpdateCommand(prompt, reviewList));
 
-    ArrayList<Info> InfoList = new ArrayList<>();
-    commandMap.put("/info/add", new InfoAddCommand(prompt, InfoList));
-    commandMap.put("/info/delete", new InfoDeleteCommand(prompt, InfoList));
-    commandMap.put("/info/detail", new InfoDetailCommand(prompt, InfoList));
-    commandMap.put("/info/update", new InfoUpdateCommand(prompt, InfoList));
-    commandMap.put("/info/list", new InfoListCommand(InfoList));
+    commandMap.put("/info/add", new InfoAddCommand(prompt, infoList));
+    commandMap.put("/info/delete", new InfoDeleteCommand(prompt, infoList));
+    commandMap.put("/info/detail", new InfoDetailCommand(prompt, infoList));
+    commandMap.put("/info/update", new InfoUpdateCommand(prompt, infoList));
+    commandMap.put("/info/list", new InfoListCommand(infoList));
 
-    LinkedList<Member> memberList = new LinkedList<>();
     commandMap.put("/member/add", new MemberAddCommand(prompt, memberList));
     commandMap.put("/member/delete", new MemberDeleteCommand(prompt, memberList));
     commandMap.put("/member/detail", new MemberDetailCommand(prompt, memberList));
@@ -96,6 +107,10 @@ public class App {
       }
     }
     keyboard.close();
+
+    saveReviewData();
+    saveMemberData();
+    saveInfoData();
   }
 
   private static void printCommandHistory(Iterator<String> iterator) {
@@ -109,6 +124,217 @@ public class App {
         if (str.equalsIgnoreCase("q")) {
           break;
         }
+      }
+    }
+  }
+
+
+
+  private static void loadReviewData() {
+    // 데이터가 보관된 파일을 정보를 준비한다.
+    File file = new File("./review.csv");
+
+    FileReader in = null;
+    Scanner dataScan = null;
+
+    try {
+      in = new FileReader(file);
+      dataScan = new Scanner(in);
+      int count = 0;
+
+      while (true) {
+        try {
+          String line = dataScan.nextLine();
+          String[] data = line.split(",");
+
+          Review review = new Review();
+          review.setNo(Integer.parseInt(data[0]));
+          review.setMovieTitle(data[1]);
+          review.setReviewSummary(data[2]);
+          review.setUpdateDay(Date.valueOf(data[3]));
+          review.setViewCount(Integer.parseInt(data[4]));
+
+          // Lesson 객체를 Command가 사용하는 목록에 저장한다.
+          reviewList.add(review);
+          count++;
+
+        } catch (Exception e) {
+          break;
+        }
+      }
+      System.out.printf("총 %d 개의 리뷰 데이터를 로딩했습니다.\n", count);
+    } catch (FileNotFoundException e) {
+      System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
+    } finally {
+      try {
+        dataScan.close();
+      } catch (Exception e) {
+      }
+      try {
+        in.close();
+      } catch (Exception e) {
+      }
+    }
+  }
+
+  private static void loadMemberData() {
+    File file = new File("./member.csv");
+    FileReader in = null;
+    Scanner dataScan = null;
+    try {
+      int count = 0;
+      in = new FileReader(file);
+      dataScan = new Scanner(in);
+      while (true) {
+        try {
+          String line = dataScan.nextLine();
+          String[] data = line.split(",");
+          Member member = new Member();
+          member.setNo(Integer.parseInt(data[0]));
+          member.setName(data[1]);
+          member.setEmail(data[2]);
+          member.setPassword(data[3]);
+          member.setPhoto(data[4]);
+          member.setTel(data[5]);
+          member.setRegisterDate(Date.valueOf(data[6]));
+          memberList.add(member);
+          count++;
+        } catch (Exception e) {
+          break;
+        }
+      }
+      System.out.printf("총 %d 개의 멤버 데이터를 로딩했습니다.\n", count);
+
+    } catch (FileNotFoundException e) {
+      System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
+    } finally {
+      try {
+        dataScan.close();
+      } catch (Exception e) {
+      }
+      try {
+        in.close();
+      } catch (Exception e) {
+      }
+    }
+  }
+
+  private static void loadInfoData() {
+    File file = new File("./info.csv");
+    FileReader in = null;
+    Scanner dataScan = null;
+    try {
+      int count = 0;
+      in = new FileReader(file);
+      dataScan = new Scanner(in);
+      while (true) {
+        try {
+          String line = dataScan.nextLine();
+          String[] data = line.split(",");
+          Info info = new Info();
+          info.setNo(Integer.parseInt(data[0]));
+          info.setMovieTitle(data[1]);
+          info.setGenre(data[2]);
+          info.setSummary(data[3]);
+          info.setDirector(data[4]);
+          info.setActor(data[5]);
+          info.setKmrb(data[6]);
+          info.setOpenDate(Date.valueOf(data[7]));
+          info.setRunningTime(Integer.parseInt(data[8]));
+          infoList.add(info);
+          count++;
+        } catch (Exception e) {
+          break;
+        }
+      }
+      System.out.printf("총 %d 개의 영화 정보 데이터를 로딩했습니다.\n", count);
+
+    } catch (FileNotFoundException e) {
+      System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
+    } finally {
+      try {
+        dataScan.close();
+      } catch (Exception e) {
+      }
+      try {
+        in.close();
+      } catch (Exception e) {
+      }
+    }
+  }
+
+  private static void saveReviewData() {
+    File file = new File("./review.csv");
+    FileWriter out = null;
+    try {
+      out = new FileWriter(file);
+      int count = 0;
+      for (Review review : reviewList) {
+        String line = String.format("%d,%s,%s,%s,%d\n", review.getNo(), review.getMovieTitle(),
+            review.getReviewSummary(), review.getUpdateDay(), review.getViewCount());
+        out.write(line);
+        count++;
+      }
+      System.out.printf("총 %d 개의 리뷰 데이터를 저장했습니다.\n", count);
+    } catch (IOException e) {
+      System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
+    } finally {
+      try {
+        out.close();
+      } catch (Exception e) {
+      }
+    }
+  }
+
+  private static void saveMemberData() {
+    File file = new File("./member.csv");
+
+    FileWriter out = null;
+
+    try {
+      out = new FileWriter(file);
+      int count = 0;
+
+      for (Member member : memberList) {
+        String line = String.format("%d,%s,%s,%s,%s,%s,%s\n", member.getNo(), member.getName(),
+            member.getEmail(), member.getPassword(), member.getPhoto(), member.getTel(),
+            member.getRegisterDate());
+        out.write(line);
+        count++;
+      }
+      System.out.printf("총 %d 개의 멤버 데이터를 저장했습니다.\n", count);
+
+    } catch (IOException e) {
+      System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
+
+    } finally {
+      try {
+        out.close();
+      } catch (Exception e) {
+      }
+    }
+  }
+
+  private static void saveInfoData() {
+    File file = new File("./info.csv");
+    FileWriter out = null;
+    try {
+      out = new FileWriter(file);
+      int count = 0;
+      for (Info info : infoList) {
+        String line = String.format("%d,%s,%s,%s,%s,%s,%s,%s,%d\n", info.getNo(),
+            info.getMovieTitle(), info.getGenre(), info.getSummary(), info.getDirector(),
+            info.getActor(), info.getKmrb(), info.getOpenDate(), info.getRunningTime());
+        out.write(line);
+        count++;
+      }
+      System.out.printf("총 %d 개의 영화 정보 데이터를 저장했습니다.\n", count);
+    } catch (IOException e) {
+      System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
+    } finally {
+      try {
+        out.close();
+      } catch (Exception e) {
       }
     }
   }
