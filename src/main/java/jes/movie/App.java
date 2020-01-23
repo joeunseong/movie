@@ -1,18 +1,20 @@
 package jes.movie;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
+import com.google.gson.Gson;
 import jes.movie.domain.Info;
 import jes.movie.domain.Member;
 import jes.movie.domain.Review;
@@ -39,9 +41,9 @@ public class App {
   static Deque<String> commandStack = new ArrayDeque<>();
   static Queue<String> commandQueue = new LinkedList<>();
 
-  static LinkedList<Review> reviewList = new LinkedList<>();
-  static ArrayList<Info> infoList = new ArrayList<>();
-  static LinkedList<Member> memberList = new LinkedList<>();
+  static List<Review> reviewList = new ArrayList<>();
+  static List<Info> infoList = new ArrayList<>();
+  static List<Member> memberList = new ArrayList<>();
 
   public static void main(String[] args) {
     loadReviewData();
@@ -130,166 +132,64 @@ public class App {
 
 
   private static void loadReviewData() {
-    File file = new File("./review.csv");
-    FileReader in = null;
-    Scanner dataScan = null;
-    try {
-      in = new FileReader(file);
-      dataScan = new Scanner(in);
-      int count = 0;
-
-      while (true) {
-        try {
-          reviewList.add(Review.valueOf(dataScan.nextLine()));
-          count++;
-        } catch (Exception e) {
-          break;
-        }
-      }
-      System.out.printf("총 %d 개의 리뷰 데이터를 로딩했습니다.\n", count);
-    } catch (FileNotFoundException e) {
+    File file = new File("./review.json");
+    try (FileReader in = new FileReader(file)) {
+      reviewList.addAll(Arrays.asList(new Gson().fromJson(in, Review[].class)));
+      System.out.printf("총 %d 개의 리뷰 데이터를 로딩했습니다.\n", reviewList.size());
+    } catch (IOException e) {
       System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
-    } finally {
-      try {
-        dataScan.close();
-      } catch (Exception e) {
-      }
-      try {
-        in.close();
-      } catch (Exception e) {
-      }
     }
   }
 
   private static void loadMemberData() {
-    File file = new File("./member.csv");
-    FileReader in = null;
-    Scanner dataScan = null;
-    try {
-      int count = 0;
-      in = new FileReader(file);
-      dataScan = new Scanner(in);
-      while (true) {
-        try {
-          memberList.add(Member.valueOf(dataScan.nextLine()));
-          count++;
-        } catch (Exception e) {
-          break;
-        }
-      }
-      System.out.printf("총 %d 개의 멤버 데이터를 로딩했습니다.\n", count);
-
-    } catch (FileNotFoundException e) {
+    File file = new File("./member.json");
+    try (FileReader in = new FileReader(file)) {
+      memberList.addAll(Arrays.asList(new Gson().fromJson(in, Member[].class)));
+      System.out.printf("총 %d 개의 멤버 데이터를 로딩했습니다.\n", memberList.size());
+    } catch (IOException e) {
       System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
-    } finally {
-      try {
-        dataScan.close();
-      } catch (Exception e) {
-      }
-      try {
-        in.close();
-      } catch (Exception e) {
-      }
     }
   }
 
   private static void loadInfoData() {
-    File file = new File("./info.csv");
-    FileReader in = null;
-    Scanner dataScan = null;
-    try {
-      int count = 0;
-      in = new FileReader(file);
-      dataScan = new Scanner(in);
-      while (true) {
-        try {
-          infoList.add(Info.valueOf(dataScan.nextLine()));
-          count++;
-        } catch (Exception e) {
-          break;
-        }
-      }
-      System.out.printf("총 %d 개의 영화 정보 데이터를 로딩했습니다.\n", count);
+    File file = new File("./info.json");
+    try (FileReader in = new FileReader(file)) {
+      infoList.addAll(Arrays.asList(new Gson().fromJson(in, Info[].class)));
+      System.out.printf("총 %d 개의 영화 정보 데이터를 로딩했습니다.\n", infoList.size());
 
-    } catch (FileNotFoundException e) {
+    } catch (IOException e) {
       System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
-    } finally {
-      try {
-        dataScan.close();
-      } catch (Exception e) {
-      }
-      try {
-        in.close();
-      } catch (Exception e) {
-      }
     }
   }
 
   private static void saveReviewData() {
-    File file = new File("./review.csv");
-    FileWriter out = null;
-    try {
-      out = new FileWriter(file);
-      int count = 0;
-      for (Review review : reviewList) {
-        out.write(review.toCsvString() + "\n");
-        count++;
-      }
-      System.out.printf("총 %d 개의 리뷰 데이터를 저장했습니다.\n", count);
+    File file = new File("./review.json");
+    try (FileWriter out = new FileWriter(file)) {
+      out.write(new Gson().toJson(reviewList));
+      System.out.printf("총 %d 개의 리뷰 데이터를 저장했습니다.\n", reviewList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
-    } finally {
-      try {
-        out.close();
-      } catch (Exception e) {
-      }
     }
   }
 
   private static void saveMemberData() {
-    File file = new File("./member.csv");
-
-    FileWriter out = null;
-
-    try {
-      out = new FileWriter(file);
-      int count = 0;
-
-      for (Member member : memberList) {
-        out.write(member.toCsvString() + "\n");
-        count++;
-      }
-      System.out.printf("총 %d 개의 멤버 데이터를 저장했습니다.\n", count);
+    File file = new File("./member.json");
+    try (FileWriter out = new FileWriter(file)) {
+      out.write(new Gson().toJson(memberList));
+      System.out.printf("총 %d 개의 멤버 데이터를 저장했습니다.\n", memberList.size());
 
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
-
-    } finally {
-      try {
-        out.close();
-      } catch (Exception e) {
-      }
     }
   }
 
   private static void saveInfoData() {
-    File file = new File("./info.csv");
-    FileWriter out = null;
-    try {
-      out = new FileWriter(file);
-      int count = 0;
-      for (Info info : infoList) {
-        out.write(info.toCsvString() + "\n");
-        count++;
-      }
-      System.out.printf("총 %d 개의 영화 정보 데이터를 저장했습니다.\n", count);
+    File file = new File("./info.json");
+    try (FileWriter out = new FileWriter(file)) {
+      out.write(new Gson().toJson(infoList));
+      System.out.printf("총 %d 개의 영화 정보 데이터를 저장했습니다.\n", infoList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
-    } finally {
-      try {
-        out.close();
-      } catch (Exception e) {
-      }
     }
   }
 }
