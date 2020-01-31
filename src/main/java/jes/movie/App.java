@@ -1,5 +1,7 @@
 package jes.movie;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -133,7 +135,7 @@ public class App {
 
   private static void loadReviewData() {
     File file = new File("./review.json");
-    try (FileReader in = new FileReader(file)) {
+    try (BufferedReader in = new BufferedReader(new FileReader(file))) {
       reviewList.addAll(Arrays.asList(new Gson().fromJson(in, Review[].class)));
       System.out.printf("총 %d 개의 리뷰 데이터를 로딩했습니다.\n", reviewList.size());
     } catch (IOException e) {
@@ -143,7 +145,7 @@ public class App {
 
   private static void loadMemberData() {
     File file = new File("./member.json");
-    try (FileReader in = new FileReader(file)) {
+    try (BufferedReader in = new BufferedReader(new FileReader(file))) {
       memberList.addAll(Arrays.asList(new Gson().fromJson(in, Member[].class)));
       System.out.printf("총 %d 개의 멤버 데이터를 로딩했습니다.\n", memberList.size());
     } catch (IOException e) {
@@ -153,7 +155,7 @@ public class App {
 
   private static void loadInfoData() {
     File file = new File("./info.json");
-    try (FileReader in = new FileReader(file)) {
+    try (BufferedReader in = new BufferedReader(new FileReader(file))) {
       infoList.addAll(Arrays.asList(new Gson().fromJson(in, Info[].class)));
       System.out.printf("총 %d 개의 영화 정보 데이터를 로딩했습니다.\n", infoList.size());
 
@@ -164,7 +166,7 @@ public class App {
 
   private static void saveReviewData() {
     File file = new File("./review.json");
-    try (FileWriter out = new FileWriter(file)) {
+    try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
       out.write(new Gson().toJson(reviewList));
       System.out.printf("총 %d 개의 리뷰 데이터를 저장했습니다.\n", reviewList.size());
     } catch (IOException e) {
@@ -174,7 +176,7 @@ public class App {
 
   private static void saveMemberData() {
     File file = new File("./member.json");
-    try (FileWriter out = new FileWriter(file)) {
+    try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
       out.write(new Gson().toJson(memberList));
       System.out.printf("총 %d 개의 멤버 데이터를 저장했습니다.\n", memberList.size());
 
@@ -185,7 +187,7 @@ public class App {
 
   private static void saveInfoData() {
     File file = new File("./info.json");
-    try (FileWriter out = new FileWriter(file)) {
+    try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
       out.write(new Gson().toJson(infoList));
       System.out.printf("총 %d 개의 영화 정보 데이터를 저장했습니다.\n", infoList.size());
     } catch (IOException e) {
