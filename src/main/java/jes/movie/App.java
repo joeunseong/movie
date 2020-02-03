@@ -13,11 +13,14 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.Set;
+import jes.movie.context.ApplicationContextListener;
 import jes.movie.domain.Info;
 import jes.movie.domain.Member;
 import jes.movie.domain.Review;
@@ -40,17 +43,42 @@ import jes.movie.handler.ReviewUpdateCommand;
 import jes.movie.util.Prompt;
 
 public class App {
-  static Scanner keyboard = new Scanner(System.in);
-  static Deque<String> commandStack = new ArrayDeque<>();
-  static Queue<String> commandQueue = new LinkedList<>();
+  Scanner keyboard = new Scanner(System.in);
+  Deque<String> commandStack = new ArrayDeque<>();
+  Queue<String> commandQueue = new LinkedList<>();
 
-  static List<Review> reviewList = new ArrayList<>();
-  static List<Info> infoList = new ArrayList<>();
-  static List<Member> memberList = new ArrayList<>();
+  List<Review> reviewList = new ArrayList<>();
+  List<Info> infoList = new ArrayList<>();
+  List<Member> memberList = new ArrayList<>();
 
-  public static void main(String[] args) {
+  Set<ApplicationContextListener> listeners = new HashSet<>();
+
+  public void addApplicationContextListener(ApplicationContextListener listener) {
+    listeners.add(listener);
+  }
+
+  public void removeApplicationContextListener(ApplicationContextListener listener) {
+    listeners.remove(listener);
+  }
+
+  private void notifyApplicationInitailized() {
+    for (ApplicationContextListener listener : listeners) {
+      listener.contextInitialized();
+    }
+  }
+
+  private void notifyApplicationDestroyed() {
+    for (ApplicationContextListener listener : listeners) {
+      listener.contextDestroyed();
+    }
+  }
+
+  public void service() {
+    notifyApplicationInitailized();
     loadReviewData();
+
     loadMemberData();
+
     loadInfoData();
 
     Prompt prompt = new Prompt(keyboard);
@@ -113,11 +141,15 @@ public class App {
     keyboard.close();
 
     saveReviewData();
+
     saveMemberData();
+
     saveInfoData();
+    notifyApplicationDestroyed();
+
   }
 
-  private static void printCommandHistory(Iterator<String> iterator) {
+  private void printCommandHistory(Iterator<String> iterator) {
     int count = 0;
     while (iterator.hasNext()) {
       System.out.println(iterator.next());
@@ -133,7 +165,7 @@ public class App {
   }
 
   @SuppressWarnings("unchecked")
-  private static void loadReviewData() {
+  private void loadReviewData() {
     File file = new File("./review.ser2");
     try (ObjectInputStream in =
         new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
@@ -147,7 +179,7 @@ public class App {
   }
 
   @SuppressWarnings("unchecked")
-  private static void loadMemberData() {
+  private void loadMemberData() {
     File file = new File("./member.ser2");
     try (ObjectInputStream in =
         new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
@@ -159,7 +191,7 @@ public class App {
   }
 
   @SuppressWarnings("unchecked")
-  private static void loadInfoData() {
+  private void loadInfoData() {
     File file = new File("./info.ser2");
     try (ObjectInputStream in =
         new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
@@ -172,7 +204,7 @@ public class App {
   }
 
 
-  private static void saveReviewData() {
+  private void saveReviewData() {
     File file = new File("./review.ser2");
     try (ObjectOutputStream out =
         new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
@@ -183,7 +215,7 @@ public class App {
     }
   }
 
-  private static void saveMemberData() {
+  private void saveMemberData() {
     File file = new File("./member.ser2");
     try (ObjectOutputStream out =
         new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
@@ -195,7 +227,7 @@ public class App {
     }
   }
 
-  private static void saveInfoData() {
+  private void saveInfoData() {
     File file = new File("./info.ser2");
     try (ObjectOutputStream out =
         new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
@@ -204,6 +236,11 @@ public class App {
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
     }
+  }
+
+  public static void main(String[] args) {
+    App app = new App();
+    app.service();
   }
 }
 
