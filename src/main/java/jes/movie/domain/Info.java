@@ -1,8 +1,11 @@
 package jes.movie.domain;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Info {
+public class Info implements Serializable {
+
+  private static final long serialVersionUID = 20200203L;
   private int no;
   private String movieTitle;
   private String genre;

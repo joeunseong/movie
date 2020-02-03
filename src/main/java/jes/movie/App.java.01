@@ -132,39 +132,45 @@ public class App {
     }
   }
 
-  @SuppressWarnings("unchecked")
   private static void loadReviewData() {
-    File file = new File("./review.ser2");
+    File file = new File("./review.ser");
     try (ObjectInputStream in =
         new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+      int size = in.readInt();
+      for (int i = 0; i < size; i++) {
 
-      reviewList = (List<Review>) in.readObject();
+        reviewList.add((Review) in.readObject());
 
+      }
       System.out.printf("총 %d 개의 리뷰 데이터를 로딩했습니다.\n", reviewList.size());
     } catch (Exception e) {
       System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
     }
   }
 
-  @SuppressWarnings("unchecked")
   private static void loadMemberData() {
-    File file = new File("./member.ser2");
+    File file = new File("./member.ser");
     try (ObjectInputStream in =
         new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
-      memberList = (List<Member>) in.readObject();
+      int size = in.readInt();
+      for (int i = 0; i < size; i++) {
+        memberList.add((Member) in.readObject());
+      }
       System.out.printf("총 %d 개의 멤버 데이터를 로딩했습니다.\n", memberList.size());
     } catch (Exception e) {
       System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
     }
   }
 
-  @SuppressWarnings("unchecked")
   private static void loadInfoData() {
-    File file = new File("./info.ser2");
+    File file = new File("./info.ser");
     try (ObjectInputStream in =
         new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+      int size = in.readInt();
+      for (int i = 0; i < size; i++) {
 
-      infoList = (List<Info>) in.readObject();
+        infoList.add((Info) in.readObject());
+      }
       System.out.printf("총 %d 개의 영화 정보 데이터를 로딩했습니다.\n", infoList.size());
     } catch (Exception e) {
       System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
@@ -173,10 +179,13 @@ public class App {
 
 
   private static void saveReviewData() {
-    File file = new File("./review.ser2");
+    File file = new File("./review.ser");
     try (ObjectOutputStream out =
         new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
-      out.writeObject(reviewList);
+      out.writeInt(reviewList.size());
+      for (Review review : reviewList) {
+        out.writeObject(review);
+      }
       System.out.printf("총 %d 개의 리뷰 데이터를 저장했습니다.\n", reviewList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
@@ -184,11 +193,13 @@ public class App {
   }
 
   private static void saveMemberData() {
-    File file = new File("./member.ser2");
+    File file = new File("./member.ser");
     try (ObjectOutputStream out =
         new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
-
-      out.writeObject(memberList);
+      out.writeInt(memberList.size());
+      for (Member member : memberList) {
+        out.writeObject(member);
+      }
       System.out.printf("총 %d 개의 멤버 데이터를 저장했습니다.\n", memberList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
@@ -196,10 +207,13 @@ public class App {
   }
 
   private static void saveInfoData() {
-    File file = new File("./info.ser2");
+    File file = new File("./info.ser");
     try (ObjectOutputStream out =
         new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
-      out.writeObject(infoList);
+      out.writeInt(infoList.size());
+      for (Info info : infoList) {
+        out.writeObject(info);
+      }
       System.out.printf("총 %d 개의 영화 정보 데이터를 저장했습니다.\n", infoList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
