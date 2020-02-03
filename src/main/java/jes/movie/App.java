@@ -1,14 +1,16 @@
 package jes.movie;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,7 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
-import com.google.gson.Gson;
 import jes.movie.domain.Info;
 import jes.movie.domain.Member;
 import jes.movie.domain.Review;
@@ -131,12 +132,21 @@ public class App {
     }
   }
 
-
-
   private static void loadReviewData() {
-    File file = new File("./review.json");
-    try (BufferedReader in = new BufferedReader(new FileReader(file))) {
-      reviewList.addAll(Arrays.asList(new Gson().fromJson(in, Review[].class)));
+    File file = new File("./review.data");
+    try (DataInputStream in =
+        new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+      int size = in.readInt();
+      for (int i = 0; i < size; i++) {
+        Review review = new Review();
+        review.setNo(in.readInt());
+        review.setMovieTitle(in.readUTF());
+        review.setReviewSummary(in.readUTF());
+        review.setUpdateDay(Date.valueOf(in.readUTF()));
+        review.setViewCount(in.readInt());
+        reviewList.add(review);
+
+      }
       System.out.printf("총 %d 개의 리뷰 데이터를 로딩했습니다.\n", reviewList.size());
     } catch (IOException e) {
       System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
@@ -144,9 +154,21 @@ public class App {
   }
 
   private static void loadMemberData() {
-    File file = new File("./member.json");
-    try (BufferedReader in = new BufferedReader(new FileReader(file))) {
-      memberList.addAll(Arrays.asList(new Gson().fromJson(in, Member[].class)));
+    File file = new File("./member.data");
+    try (DataInputStream in =
+        new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+      int size = in.readInt();
+      for (int i = 0; i < size; i++) {
+        Member member = new Member();
+        member.setNo(in.readInt());
+        member.setName(in.readUTF());
+        member.setEmail(in.readUTF());
+        member.setPassword(in.readUTF());
+        member.setPhoto(in.readUTF());
+        member.setTel(in.readUTF());
+        member.setRegisterDate(Date.valueOf(in.readUTF()));
+        memberList.add(member);
+      }
       System.out.printf("총 %d 개의 멤버 데이터를 로딩했습니다.\n", memberList.size());
     } catch (IOException e) {
       System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
@@ -154,20 +176,42 @@ public class App {
   }
 
   private static void loadInfoData() {
-    File file = new File("./info.json");
-    try (BufferedReader in = new BufferedReader(new FileReader(file))) {
-      infoList.addAll(Arrays.asList(new Gson().fromJson(in, Info[].class)));
+    File file = new File("./info.data");
+    try (DataInputStream in =
+        new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+      int size = in.readInt();
+      for (int i = 0; i < size; i++) {
+        Info info = new Info();
+        info.setNo(in.readInt());
+        info.setMovieTitle(in.readUTF());
+        info.setGenre(in.readUTF());
+        info.setSummary(in.readUTF());
+        info.setDirector(in.readUTF());
+        info.setActor(in.readUTF());
+        info.setKmrb(in.readUTF());
+        info.setOpenDate(Date.valueOf(in.readUTF()));
+        info.setRunningTime(in.readInt());
+        infoList.add(info);
+      }
       System.out.printf("총 %d 개의 영화 정보 데이터를 로딩했습니다.\n", infoList.size());
-
     } catch (IOException e) {
       System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
     }
   }
 
+
   private static void saveReviewData() {
-    File file = new File("./review.json");
-    try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
-      out.write(new Gson().toJson(reviewList));
+    File file = new File("./review.data");
+    try (DataOutputStream out =
+        new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+      out.writeInt(reviewList.size());
+      for (Review review : reviewList) {
+        out.writeInt(review.getNo());
+        out.writeUTF(review.getMovieTitle());
+        out.writeUTF(review.getReviewSummary());
+        out.writeUTF(review.getUpdateDay().toString());
+        out.writeInt(review.getViewCount());
+      }
       System.out.printf("총 %d 개의 리뷰 데이터를 저장했습니다.\n", reviewList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
@@ -175,20 +219,41 @@ public class App {
   }
 
   private static void saveMemberData() {
-    File file = new File("./member.json");
-    try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
-      out.write(new Gson().toJson(memberList));
+    File file = new File("./member.data");
+    try (DataOutputStream out =
+        new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+      out.writeInt(memberList.size());
+      for (Member member : memberList) {
+        out.writeInt(member.getNo());
+        out.writeUTF(member.getName());
+        out.writeUTF(member.getEmail());
+        out.writeUTF(member.getPassword());
+        out.writeUTF(member.getPhoto());
+        out.writeUTF(member.getTel());
+        out.writeUTF(member.getRegisterDate().toString());
+      }
       System.out.printf("총 %d 개의 멤버 데이터를 저장했습니다.\n", memberList.size());
-
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
     }
   }
 
   private static void saveInfoData() {
-    File file = new File("./info.json");
-    try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
-      out.write(new Gson().toJson(infoList));
+    File file = new File("./info.data");
+    try (DataOutputStream out =
+        new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+      out.writeInt(infoList.size());
+      for (Info info : infoList) {
+        out.writeInt(info.getNo());
+        out.writeUTF(info.getMovieTitle());
+        out.writeUTF(info.getGenre());
+        out.writeUTF(info.getSummary());
+        out.writeUTF(info.getDirector());
+        out.writeUTF(info.getActor());
+        out.writeUTF(info.getKmrb());
+        out.writeUTF(info.getOpenDate().toString());
+        out.writeInt(info.getRunningTime());
+      }
       System.out.printf("총 %d 개의 영화 정보 데이터를 저장했습니다.\n", infoList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
