@@ -1,5 +1,8 @@
 package jes.movie;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
@@ -8,6 +11,21 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 import jes.movie.handler.Command;
+import jes.movie.handler.InfoAddCommand;
+import jes.movie.handler.InfoDeleteCommand;
+import jes.movie.handler.InfoDetailCommand;
+import jes.movie.handler.InfoListCommand;
+import jes.movie.handler.InfoUpdateCommand;
+import jes.movie.handler.MemberAddCommand;
+import jes.movie.handler.MemberDeleteCommand;
+import jes.movie.handler.MemberDetailCommand;
+import jes.movie.handler.MemberListCommand;
+import jes.movie.handler.MemberUpdateCommand;
+import jes.movie.handler.ReviewAddCommand;
+import jes.movie.handler.ReviewDeleteCommand;
+import jes.movie.handler.ReviewDetailCommand;
+import jes.movie.handler.ReviewListCommand;
+import jes.movie.handler.ReviewUpdateCommand;
 import jes.movie.util.Prompt;
 
 public class ClientApp {
@@ -16,47 +34,101 @@ public class ClientApp {
   Prompt prompt = new Prompt(keyboard);
 
   public void service() {
-    Deque<String> commandStack = new ArrayDeque<>();
-    Queue<String> commandQueue = new LinkedList<>();
-    HashMap<String, Command> commandMap = new HashMap<>();
+    String serverAddr = null;
+    int port = 0;
 
-    String command;
+    try {
+      serverAddr = prompt.inputString("서버? ");
+      port = prompt.inputInt("포트? ");
 
-    while (true) {
-      command = prompt.inputString("\n명령> ");
-      if (command.length() == 0) {
-        continue;
-      }
+    } catch (Exception e) {
+      System.out.println("서버 주소 또는 포트 번호가 유효하지 않습니다.");
+      keyboard.close();
+      return;
+    }
+    try (Socket socket = new Socket(serverAddr, port);
+        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+      System.out.println("서버와 연결되었음!");
 
-      if (command.equals("quit")) {
-        System.out.println("종료!");
-        break;
-      } else if (command.equals("history")) {
-        printCommandHistory(commandStack.iterator());
-        continue;
-      } else if (command.equals("history2")) {
-        printCommandHistory(commandQueue.iterator());
-        continue;
-      }
+      processCommand(out, in);
 
+      System.out.println("서버와 연결을 끊었음!");
 
-      commandStack.push(command);
-      commandQueue.offer(command);
-
-      Command commandHandler = commandMap.get(command);
-
-      if (commandHandler != null) {
-        try {
-          commandHandler.execute();
-        } catch (Exception e) {
-          System.out.printf("명령어 실행 중 오류 발생: %s\n", e.getMessage());
-        }
-      } else {
-        System.out.println("실행할 수 없는 명령입니다.");
-      }
+    } catch (Exception e) {
+      System.out.println("예외발생:");
+      e.printStackTrace();
     }
     keyboard.close();
+  }
 
+  private void processCommand(ObjectOutputStream out, ObjectInputStream in) {
+    Deque<String> commandStack = new ArrayDeque<>();
+    Queue<String> commandQueue = new LinkedList<>();
+
+    HashMap<String, Command> commandMap = new HashMap<>();
+    commandMap.put("/review/list", new ReviewListCommand(out, in));
+    commandMap.put("/review/add", new ReviewAddCommand(out, in, prompt));
+    commandMap.put("/review/detail", new ReviewDetailCommand(out, in, prompt));
+    commandMap.put("/review/delete", new ReviewDeleteCommand(out, in, prompt));
+    commandMap.put("/review/update", new ReviewUpdateCommand(out, in, prompt));
+
+    commandMap.put("/info/list", new InfoListCommand(out, in));
+    commandMap.put("/info/add", new InfoAddCommand(out, in, prompt));
+    commandMap.put("/info/delete", new InfoDeleteCommand(out, in, prompt));
+    commandMap.put("/info/detail", new InfoDetailCommand(out, in, prompt));
+    commandMap.put("/info/update", new InfoUpdateCommand(out, in, prompt));
+
+    commandMap.put("/member/add", new MemberAddCommand(out, in, prompt));
+    commandMap.put("/member/delete", new MemberDeleteCommand(out, in, prompt));
+    commandMap.put("/member/detail", new MemberDetailCommand(out, in, prompt));
+    commandMap.put("/member/list", new MemberListCommand(out, in));
+    commandMap.put("/member/update", new MemberUpdateCommand(out, in, prompt));
+
+    try {
+      while (true) {
+        String command;
+        command = prompt.inputString("\n명령> ");
+
+        if (command.length() == 0) {
+          continue;
+        }
+
+        if (command.equals("quit") || command.equals("/server/stop")) {
+          out.writeUTF(command);
+          out.flush();
+          System.out.println("서버: " + in.readUTF());
+          System.out.println("안녕!");
+          break;
+        } else if (command.equals("history")) {
+          printCommandHistory(commandStack.iterator());
+          continue;
+        } else if (command.equals("history2")) {
+          printCommandHistory(commandQueue.iterator());
+          continue;
+        }
+
+
+        commandStack.push(command);
+        commandQueue.offer(command);
+
+        Command commandHandler = commandMap.get(command);
+
+        if (commandHandler != null) {
+          try {
+            commandHandler.execute();
+          } catch (Exception e) {
+            e.printStackTrace();
+            System.out.printf("명령어 실행 중 오류 발생: %s\n", e.getMessage());
+          }
+        } else {
+          System.out.println("실행할 수 없는 명령입니다.");
+        }
+      }
+    } catch (Exception e) {
+      System.out.println("프로그램 실행 중 오류 발생!");
+    }
+    keyboard.close();
   }
 
   public void printCommandHistory(Iterator<String> iterator) {
@@ -77,48 +149,5 @@ public class ClientApp {
     System.out.println("클라이언트 수업 관리 시스템입니다");
     ClientApp app = new ClientApp();
     app.service();
-
-    // String serverAddr = null;
-    // int port = 0;
-    //
-    //
-    // try {
-    // System.out.print("서버? ");
-    // serverAddr = keyScan.nextLine();
-    //
-    // System.out.print("포토? ");
-    // port = Integer.parseInt(keyScan.nextLine());
-    // } catch (Exception e) {
-    // System.out.println("서버 주소 또는 포트 번호가 유효하지 않습니다.");
-    // keyScan.close();
-    // return;
-    // }
-    // try (
-    // // 서버와 연결
-    // Socket socket = new Socket(serverAddr, port);
-    //
-    // // 소켓을 ㅌ오해 데이터를 읽고 쓰는 도구를 준비한다.
-    // PrintStream out = new PrintStream(socket.getOutputStream());
-    // Scanner in = new Scanner(socket.getInputStream())) {
-    // System.out.println("서버와 연결되었음!");
-    // String sendMsg = keyScan.nextLine();
-    //
-    // // 서버에 메시지 전송
-    // out.println(sendMsg);
-    // System.out.println("서버에 메시지를 전송하였음!");
-    //
-    // // 서버가 응답한 메시지를 수신한다.
-    // String message = in.nextLine();
-    // System.out.println("서버로부터 메시지를 수신하였음!");
-    //
-    // // 서버가 받은 메시지를 출력
-    // System.out.println("서버 :" + message);
-    //
-    // System.out.println("서버와 연결을 끊었음!");
-    // } catch (Exception e) {
-    // System.out.println("예외발생:");
-    // e.printStackTrace();
-    // }
-    // keyScan.close();
   }
 }
