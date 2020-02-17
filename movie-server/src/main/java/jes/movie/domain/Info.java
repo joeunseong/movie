@@ -16,6 +16,13 @@ public class Info implements Serializable {
   private Date openDate;
   private int runningTime;
 
+  @Override
+  public String toString() {
+    return "Info [no=" + no + ", movieTitle=" + movieTitle + ", genre=" + genre + ", summary="
+        + summary + ", director=" + director + ", actor=" + actor + ", kmrb=" + kmrb + ","
+        + " openDate=" + openDate + ", runningtime=" + runningTime + "]";
+  }
+
   public static Info valueOf(String csv) {
     String[] data = csv.split(",");
     Info info = new Info();
