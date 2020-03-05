@@ -14,12 +14,12 @@
 
 ## 실습  
 
-### 훈련 1: 영화 정보 데이터를 처리하는 DAO 클래스를 정의하라.
+### 작업 1: 영화 정보 데이터를 처리하는 DAO 클래스를 정의하기.
 
 - jes.movie.dao 패키지를 생성한다.
 - jes.movie.InfoObjectFileDao 클래스를 정의한다.
 
-### 훈련 2: InfoObjectFileDao 객체를 적용하라.
+### 작업 2: InfoObjectFileDao 객체를 적용하기.
 
 - jes.movie.DataLoaderListener 를 변경한다.
   - 영화 정보 데이터를 로딩하고 저장하는 기존 코드를 제거한다.
@@ -31,7 +31,7 @@
   - 데이터를 저장하고, 조회하고, 변경하고, 삭제할 때 InfoObjectFileDao 객체를 통해 처리한다.
   
   
-### 훈련 3: 회원 데이터를 처리하는 DAO 클래스를 정의하고 적용하라.
+### 작업 3: 회원 데이터를 처리하는 DAO 클래스를 정의하고 적용하기.
 
 - jes.movie.MemberObjectFileDao 클래스를 정의한다.
 - jes.movie.DataLoaderListener 를 변경한다.
@@ -44,7 +44,7 @@
   - 데이터를 저장하고, 조회하고, 변경하고, 삭제할 때 MemberObjectFileDao 객체를 통해 처리한다.
   
   
-### 훈련 4: 리뷰 데이터를 처리하는 DAO 클래스를 정의하고 적용하라.
+### 작업 4: 리뷰 데이터를 처리하는 DAO 클래스를 정의하고 적용하기.
 
 - jes.movie.ReviewObjectFileDao 클래스를 정의한다.
 - jes.movie.DataLoaderListener 를 변경한다.
