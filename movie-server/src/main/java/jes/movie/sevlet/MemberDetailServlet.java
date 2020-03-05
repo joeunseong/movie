@@ -3,27 +3,22 @@ package jes.movie.sevlet;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
+import jes.movie.dao.MemberObjectFileDao;
 import jes.movie.domain.Member;
 
 public class MemberDetailServlet implements Servlet {
 
-  List<Member> members;
+  MemberObjectFileDao memberDao;
 
-  public MemberDetailServlet(List<Member> members) {
-    this.members = members;
+  public MemberDetailServlet(MemberObjectFileDao memberDao) {
+    this.memberDao = memberDao;
   }
 
   @Override
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
     int no = in.readInt();
 
-    Member member = null;
-    for (Member m : members) {
-      if (m.getNo() == no) {
-        member = m;
-        break;
-      }
-    }
+    Member member = memberDao.findByNo(no);
 
     if (member != null) {
       out.writeUTF("OK");

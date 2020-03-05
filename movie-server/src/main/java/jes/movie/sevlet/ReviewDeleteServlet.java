@@ -2,30 +2,21 @@ package jes.movie.sevlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
-import jes.movie.domain.Review;
+import jes.movie.dao.ReviewObjectFileDao;
 
 public class ReviewDeleteServlet implements Servlet {
 
-  List<Review> reviews;
+  ReviewObjectFileDao reviewDao;
 
-  public ReviewDeleteServlet(List<Review> reviews) {
-    this.reviews = reviews;
+  public ReviewDeleteServlet(ReviewObjectFileDao reviewDao) {
+    this.reviewDao = reviewDao;
   }
 
   @Override
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
     int no = in.readInt();
-    int index = -1;
-    for (int i = 0; i < reviews.size(); i++) {
-      if (reviews.get(i).getNo() == no) {
-        index = i;
-        break;
-      }
-    }
 
-    if (index != -1) {
-      reviews.remove(index);
+    if (reviewDao.delete(no) > 0) {
       out.writeUTF("OK");
 
     } else {

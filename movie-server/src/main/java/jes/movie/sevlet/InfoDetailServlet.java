@@ -3,26 +3,21 @@ package jes.movie.sevlet;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
+import jes.movie.dao.InfoObjectFileDao;
 import jes.movie.domain.Info;
 
 public class InfoDetailServlet implements Servlet {
 
-  List<Info> infos;
+  InfoObjectFileDao infoDao;
 
-  public InfoDetailServlet(List<Info> infos) {
-    this.infos = infos;
+  public InfoDetailServlet(InfoObjectFileDao infoDao) {
+    this.infoDao = infoDao;
   }
 
   @Override
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
     int no = in.readInt();
-    Info info = null;
-    for (Info i : infos) {
-      if (i.getNo() == no) {
-        info = i;
-        break;
-      }
-    }
+    Info info = infoDao.findByNo(no);
 
     if (info != null) {
       out.writeUTF("OK");

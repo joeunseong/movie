@@ -3,27 +3,22 @@ package jes.movie.sevlet;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
+import jes.movie.dao.ReviewObjectFileDao;
 import jes.movie.domain.Review;
 
 public class ReviewDetailServlet implements Servlet {
 
-  List<Review> reviews;
+  ReviewObjectFileDao reviewDao;
 
-  public ReviewDetailServlet(List<Review> reviews) {
-    this.reviews = reviews;
+  public ReviewDetailServlet(ReviewObjectFileDao reviewDao) {
+    this.reviewDao = reviewDao;
   }
 
   @Override
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
     int no = in.readInt();
 
-    Review review = null;
-    for (Review r : reviews) {
-      if (r.getNo() == no) {
-        review = r;
-        break;
-      }
-    }
+    Review review = reviewDao.findByNo(no);
 
     if (review != null) {
       out.writeUTF("OK");
