@@ -2,15 +2,14 @@ package jes.movie.sevlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
-import jes.movie.dao.ReviewObjectFileDao;
+import jes.movie.dao.json.ReviewJsonFileDao;
 import jes.movie.domain.Review;
 
 public class ReviewDetailServlet implements Servlet {
 
-  ReviewObjectFileDao reviewDao;
+  ReviewJsonFileDao reviewDao;
 
-  public ReviewDetailServlet(ReviewObjectFileDao reviewDao) {
+  public ReviewDetailServlet(ReviewJsonFileDao reviewDao) {
     this.reviewDao = reviewDao;
   }
 

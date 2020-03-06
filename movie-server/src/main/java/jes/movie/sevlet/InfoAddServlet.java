@@ -2,15 +2,15 @@ package jes.movie.sevlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
 import jes.movie.dao.InfoObjectFileDao;
+import jes.movie.dao.json.InfoJsonFileDao;
 import jes.movie.domain.Info;
 
 public class InfoAddServlet implements Servlet {
 
-InfoObjectFileDao infoDao;
+InfoJsonFileDao infoDao;
   
-  public InfoAddServlet(InfoObjectFileDao infoDao) {
+  public InfoAddServlet(InfoJsonFileDao infoDao) {
     this.infoDao = infoDao;
   }
 

@@ -2,9 +2,9 @@ package jes.movie;
 
 import java.util.Map;
 import jes.movie.context.ApplicationContextListener;
-import jes.movie.dao.InfoObjectFileDao;
-import jes.movie.dao.MemberObjectFileDao;
-import jes.movie.dao.ReviewObjectFileDao;
+import jes.movie.dao.json.InfoJsonFileDao;
+import jes.movie.dao.json.MemberJsonFileDao;
+import jes.movie.dao.json.ReviewJsonFileDao;
 
 public class DataLoaderListener implements ApplicationContextListener {
 
@@ -12,9 +12,9 @@ public class DataLoaderListener implements ApplicationContextListener {
   public void contextInitialized(Map<String, Object> context) {
     System.out.println("데이터를 로딩합니다.");
     
-    InfoObjectFileDao infoDao = new InfoObjectFileDao("./info.ser2");
-    MemberObjectFileDao memberDao = new MemberObjectFileDao("./member.ser2");
-    ReviewObjectFileDao reviewDao = new ReviewObjectFileDao("./review.ser2");
+    InfoJsonFileDao infoDao = new InfoJsonFileDao("./info.json");
+    MemberJsonFileDao memberDao = new MemberJsonFileDao("./member.json");
+    ReviewJsonFileDao reviewDao = new ReviewJsonFileDao("./review.json");
 
     context.put("infoDao", infoDao);
     context.put("memberDao", memberDao);

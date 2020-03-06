@@ -10,9 +10,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import jes.movie.context.ApplicationContextListener;
-import jes.movie.dao.InfoObjectFileDao;
-import jes.movie.dao.MemberObjectFileDao;
-import jes.movie.dao.ReviewObjectFileDao;
+import jes.movie.dao.json.InfoJsonFileDao;
+import jes.movie.dao.json.MemberJsonFileDao;
+import jes.movie.dao.json.ReviewJsonFileDao;
 import jes.movie.sevlet.InfoAddServlet;
 import jes.movie.sevlet.InfoDeleteServlet;
 import jes.movie.sevlet.InfoDetailServlet;
@@ -56,13 +56,12 @@ public class ServerApp {
     }
   }
 
-  @SuppressWarnings("unchecked")
   public void service() {
     notifyApplicationInitailized();
     
-    InfoObjectFileDao infoDao = (InfoObjectFileDao) context.get("infoDao");
-    MemberObjectFileDao memberDao = (MemberObjectFileDao) context.get("memberDao");
-    ReviewObjectFileDao reviewDao = (ReviewObjectFileDao) context.get("reviewDao");
+    InfoJsonFileDao infoDao = (InfoJsonFileDao) context.get("infoDao");
+    MemberJsonFileDao memberDao = (MemberJsonFileDao) context.get("memberDao");
+    ReviewJsonFileDao reviewDao = (ReviewJsonFileDao) context.get("reviewDao");
 
     servletMap.put("/info/list", new InfoListServlet(infoDao));
     servletMap.put("/info/detail", new InfoDetailServlet(infoDao));

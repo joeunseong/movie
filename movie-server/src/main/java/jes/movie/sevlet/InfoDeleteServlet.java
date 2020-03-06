@@ -2,15 +2,13 @@ package jes.movie.sevlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
-import jes.movie.dao.InfoObjectFileDao;
-import jes.movie.domain.Info;
+import jes.movie.dao.json.InfoJsonFileDao;
 
 public class InfoDeleteServlet implements Servlet {
 
-  InfoObjectFileDao infoDao;
+  InfoJsonFileDao infoDao;
 
-  public InfoDeleteServlet(InfoObjectFileDao infoDao) {
+  public InfoDeleteServlet(InfoJsonFileDao infoDao) {
     this.infoDao = infoDao;
   }
 
