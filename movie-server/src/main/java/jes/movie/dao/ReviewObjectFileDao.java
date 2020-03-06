@@ -59,15 +59,6 @@ public class ReviewObjectFileDao extends AbstractObjectFileDao<Review>{
     saveData();
     return 1;
   }
-
-  private int indexOf(int no) {
-    for (int i = 0; i < list.size(); i++) {
-      if (list.get(i).getNo() == no) {
-        return i;
-      }
-    }
-    return -1;
-  }
   
   @Override
   protected <K> int indexOf(K key) {
