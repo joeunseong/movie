@@ -34,40 +34,62 @@ import jes.movie.util.Prompt;
 public class ClientApp {
   Scanner keyboard = new Scanner(System.in);
   Prompt prompt = new Prompt(keyboard);
+  
+  Deque<String> commandStack;
+  Queue<String> commandQueue;
+  
+  String host;
+  int port;
+  
+  public ClientApp() {
+    commandStack = new ArrayDeque<>();
+    commandQueue = new LinkedList<>();
+  }
 
   public void service() {
-    String serverAddr = null;
-    int port = 0;
-
     try {
-      serverAddr = prompt.inputString("서버? ");
-      port = prompt.inputInt("포트? ");
+      host = prompt.inputString("서버? ");
+      port = prompt.inputInt("포토? ");
 
     } catch (Exception e) {
       System.out.println("서버 주소 또는 포트 번호가 유효하지 않습니다.");
       keyboard.close();
       return;
     }
-    try (Socket socket = new Socket(serverAddr, port);
-        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-        ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
-      System.out.println("서버와 연결되었음!");
+    
+    while (true) {
+      String command;
+      command = prompt.inputString("\n명령> ");
 
-      processCommand(out, in);
+      if (command.length() == 0) {
+        continue;
+      }
 
-      System.out.println("서버와 연결을 끊었음!");
+      if (command.equals("history")) {
+        printCommandHistory(commandStack.iterator());
+        continue;
+      } else if (command.equals("history2")) {
+        printCommandHistory(commandQueue.iterator());
+        continue;
+      } else if(command.equals("quit")) {
+        break;
+      }
 
-    } catch (Exception e) {
-      System.out.println("예외발생:");
-      e.printStackTrace();
+
+      commandStack.push(command);
+      commandQueue.offer(command);
+      
+      processCommand(command);
     }
     keyboard.close();
   }
 
-  private void processCommand(ObjectOutputStream out, ObjectInputStream in) {
-    Deque<String> commandStack = new ArrayDeque<>();
-    Queue<String> commandQueue = new LinkedList<>();
-
+  private void processCommand(String command) {
+    try(Socket socket = new Socket(host, port);
+        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+      System.out.println("서버와 연결을 되었음!");
+      
     InfoDaoProxy infoDao = new InfoDaoProxy(in, out);
     MemberDaoProxy memberDao = new MemberDaoProxy(in, out);
     ReviewDaoProxy reviewDao = new ReviewDaoProxy(in, out);
@@ -91,51 +113,32 @@ public class ClientApp {
     commandMap.put("/review/detail", new ReviewDetailCommand(reviewDao, prompt));
     commandMap.put("/review/delete", new ReviewDeleteCommand(reviewDao, prompt));
     commandMap.put("/review/update", new ReviewUpdateCommand(reviewDao, prompt));
+    
+    commandMap.put("/server/stop", () -> {
     try {
-      while (true) {
-        String command;
-        command = prompt.inputString("\n명령> ");
-
-        if (command.length() == 0) {
-          continue;
-        }
-
-        if (command.equals("quit") || command.equals("/server/stop")) {
-          out.writeUTF(command);
-          out.flush();
-          System.out.println("서버: " + in.readUTF());
-          System.out.println("안녕!");
-          break;
-        } else if (command.equals("history")) {
-          printCommandHistory(commandStack.iterator());
-          continue;
-        } else if (command.equals("history2")) {
-          printCommandHistory(commandQueue.iterator());
-          continue;
-        }
-
-
-        commandStack.push(command);
-        commandQueue.offer(command);
-
-        Command commandHandler = commandMap.get(command);
-
-        if (commandHandler != null) {
-          try {
-            commandHandler.execute();
-          } catch (Exception e) {
-            e.printStackTrace();
-            System.out.printf("명령어 실행 중 오류 발생: %s\n", e.getMessage());
-          }
-        } else {
-          System.out.println("실행할 수 없는 명령입니다.");
-        }
+      out.writeUTF(command);
+      out.flush();
+      System.out.println("서버: " + in.readUTF());
+      System.out.println("안녕!");
+    }catch(Exception e) {
+      
       }
-    } catch (Exception e) {
-      System.out.println("프로그램 실행 중 오류 발생!");
+    });
+    
+    Command commandHandler = commandMap.get(command);
+    
+    if (commandHandler == null) {
+      System.out.println("실행할 수 없는 명령입니다.");
+      return;
     }
-    keyboard.close();
+    commandHandler.execute();
+
+  } catch (Exception e) {
+    System.out.printf("명령어 실행 중 오류 발생: %s\n", e.getMessage());
+    e.printStackTrace();
   }
+  System.out.println("서버와 연결을 끊었음!");
+}
 
   public void printCommandHistory(Iterator<String> iterator) {
     int count = 0;
