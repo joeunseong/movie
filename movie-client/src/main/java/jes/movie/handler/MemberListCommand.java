@@ -1,39 +1,26 @@
 package jes.movie.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.List;
+import jes.movie.dao.MemberDao;
 import jes.movie.domain.Member;
 
 public class MemberListCommand implements Command {
+  MemberDao memberDao;
 
-  ObjectOutputStream out;
-  ObjectInputStream in;
-
-  public MemberListCommand(ObjectOutputStream out, ObjectInputStream in) {
-    this.out = out;
-    this.in = in;
+  public MemberListCommand(MemberDao memberDao) {
+    this.memberDao = memberDao;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void execute() {
     try {
-      out.writeUTF("/member/list");
-      out.flush();
-
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-      List<Member> members = (List<Member>) in.readObject();
+      List<Member> members = memberDao.findAll();
       for (Member m : members) {
         System.out.printf("%d, %s, %s, %s, %s\n", m.getNo(), m.getName(), m.getEmail(), m.getTel(),
             m.getRegisterDate());
       }
     } catch (Exception e) {
-      System.out.println("통신 오류 발생!");
+      System.out.println("회원 목록 조회 실패!");
     }
   }
 }

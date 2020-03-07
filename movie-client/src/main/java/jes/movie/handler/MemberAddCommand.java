@@ -1,21 +1,17 @@
 package jes.movie.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.sql.Date;
+import jes.movie.dao.MemberDao;
 import jes.movie.domain.Member;
 import jes.movie.util.Prompt;
 
 public class MemberAddCommand implements Command {
 
-  ObjectOutputStream out;
-  ObjectInputStream in;
-
+  MemberDao memberDao;
   Prompt prompt;
 
-  public MemberAddCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
-    this.out = out;
-    this.in = in;
+  public MemberAddCommand(MemberDao memberDao, Prompt prompt) {
+    this.memberDao = memberDao;
     this.prompt = prompt;
   }
 
@@ -29,19 +25,13 @@ public class MemberAddCommand implements Command {
     member.setPhoto(prompt.inputString("사진? "));
     member.setTel(prompt.inputString("전화? "));
     member.setRegisterDate(new Date(System.currentTimeMillis()));
+    
     try {
-      out.writeUTF("/member/add");
-      out.writeObject(member);
-      out.flush();
-
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
+      memberDao.insert(member);
       System.out.println("저장하였습니다.");
+      
     } catch (Exception e) {
-      System.out.println("통신 오류 발생!");
+      System.out.println("회원 등록 실패!");
     }
   }
 }

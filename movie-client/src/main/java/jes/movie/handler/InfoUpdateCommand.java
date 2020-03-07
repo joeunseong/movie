@@ -1,20 +1,16 @@
 package jes.movie.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import jes.movie.dao.InfoDao;
 import jes.movie.domain.Info;
 import jes.movie.util.Prompt;
 
 public class InfoUpdateCommand implements Command {
 
-  ObjectOutputStream out;
-  ObjectInputStream in;
-
+  InfoDao infoDao;
   Prompt prompt;
 
-  public InfoUpdateCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
-    this.out = out;
-    this.in = in;
+  public InfoUpdateCommand(InfoDao infoDao, Prompt prompt) {
+    this.infoDao = infoDao;
     this.prompt = prompt;
   }
 
@@ -22,17 +18,15 @@ public class InfoUpdateCommand implements Command {
   public void execute() {
     try {
       int no = prompt.inputInt("번호? ");
-      out.writeUTF("/info/detail");
-      out.writeInt(no);
-      out.flush();
 
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
+      Info oldInfo = null;
+      try {
+        oldInfo = infoDao.findByNo(no);
+      } catch(Exception e) {
+        System.out.println("해당 번호의 영화 정보가 없습니다!");
         return;
       }
-
-      Info oldInfo = (Info) in.readObject();
+      
       Info newInfo = new Info();
 
       newInfo.setNo(oldInfo.getNo());
@@ -62,22 +56,14 @@ public class InfoUpdateCommand implements Command {
           oldInfo.getRunningTime()));
 
       if (oldInfo.equals(newInfo)) {
-        System.out.println("정보 변경을 취소하였습니다.");
+        System.out.println("영화 정보 변경을 취소하였습니다.");
         return;
       }
 
-      out.writeUTF("/info/update");
-      out.writeObject(newInfo);
-      out.flush();
-
-      response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-      System.out.println("정보가 수정되었습니다.");
+      infoDao.update(newInfo);
+      System.out.println("영화 정보가 변경되었습니다.");
     } catch (Exception e) {
-      System.out.println("명령 실행 중 오류 발생!");
+      System.out.println("영화 정보 변경 실패!");
     }
   }
 }

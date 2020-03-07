@@ -1,40 +1,27 @@
 package jes.movie.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.List;
+import jes.movie.dao.ReviewDao;
 import jes.movie.domain.Review;
 
 public class ReviewListCommand implements Command {
+  ReviewDao reviewDao;
 
-  ObjectOutputStream out;
-  ObjectInputStream in;
-
-  public ReviewListCommand(ObjectOutputStream out, ObjectInputStream in) {
-    this.out = out;
-    this.in = in;
+  public ReviewListCommand(ReviewDao reviewDao) {
+    this.reviewDao = reviewDao;
 
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void execute() {
     try {
-      out.writeUTF("/review/list");
-      out.flush();
-
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-      List<Review> reviews = (List<Review>) in.readObject();
+      List<Review> reviews = reviewDao.findAll();
       for (Review r : reviews) {
         System.out.printf("%d, %s, %s, %s, %s\n", r.getNo(), r.getMovieTitle(),
             r.getReviewSummary(), r.getUpdateDay(), r.getViewCount());
       }
     } catch (Exception e) {
-      System.out.println("통신 오류 발생!");
+      System.out.println("리뷰 목록 조회 실패!");
     }
   }
 }

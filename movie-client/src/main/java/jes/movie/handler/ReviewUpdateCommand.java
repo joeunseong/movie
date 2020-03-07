@@ -1,20 +1,16 @@
 package jes.movie.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.sql.Date;
+import jes.movie.dao.ReviewDao;
 import jes.movie.domain.Review;
 import jes.movie.util.Prompt;
 
 public class ReviewUpdateCommand implements Command {
-  ObjectOutputStream out;
-  ObjectInputStream in;
-
+  ReviewDao reviewDao;
   Prompt prompt;
 
-  public ReviewUpdateCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
-    this.out = out;
-    this.in = in;
+  public ReviewUpdateCommand(ReviewDao reviewDao, Prompt prompt) {
+    this.reviewDao = reviewDao;
     this.prompt = prompt;
   }
 
@@ -22,17 +18,16 @@ public class ReviewUpdateCommand implements Command {
   public void execute() {
     try {
       int no = prompt.inputInt("번호? ");
-      out.writeUTF("/review/detail");
-      out.writeInt(no);
-      out.flush();
 
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
+      Review oldReview = null;
+      try {
+        oldReview = reviewDao.findByNo(no);
+        
+      } catch(Exception e) {
+        System.out.println("해당 번호의 리뷰가 없습니다!");
         return;
       }
-
-      Review oldReview = (Review) in.readObject();
+          
       Review newReview = new Review();
 
       newReview.setNo(oldReview.getNo());
@@ -46,21 +41,14 @@ public class ReviewUpdateCommand implements Command {
       newReview.setViewCount(0);
 
       if (oldReview.equals(newReview)) {
-        System.out.println("리뷰가 수정이 취소되었습니다.");
+        System.out.println("리뷰가 변경을 취소되었습니다.");
         return;
       }
-      out.writeUTF("/review/update");
-      out.writeObject(newReview);
-      out.flush();
 
-      response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-      System.out.println("리뷰가 수정되었습니다.");
+      reviewDao.update(newReview);
+      System.out.println("리뷰가 변경되었습니다.");
     } catch (Exception e) {
-      System.out.println("명령 실행 중 오류 발생!");
+      System.out.println("리뷰 변경 실패!");
     }
   }
 }

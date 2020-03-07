@@ -1,20 +1,16 @@
 package jes.movie.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.sql.Date;
+import jes.movie.dao.MemberDao;
 import jes.movie.domain.Member;
 import jes.movie.util.Prompt;
 
 public class MemberUpdateCommand implements Command {
-  ObjectOutputStream out;
-  ObjectInputStream in;
-
+  MemberDao memberDao;
   Prompt prompt;
 
-  public MemberUpdateCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
-    this.out = out;
-    this.in = in;
+  public MemberUpdateCommand(MemberDao memberDao, Prompt prompt) {
+    this.memberDao = memberDao;
     this.prompt = prompt;
   }
 
@@ -22,17 +18,15 @@ public class MemberUpdateCommand implements Command {
   public void execute() {
     try {
       int no = prompt.inputInt("번호? ");
-      out.writeUTF("/member/detail");
-      out.writeInt(no);
-      out.flush();
-
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
+      Member oldMember = null;
+      
+      try {
+        oldMember = memberDao.findByNo(no);
+      } catch(Exception e) {
+        System.out.println("해당 번호의 회원이 없습니다!");
         return;
       }
-
-      Member oldMember = (Member) in.readObject();
+      
       Member newMember = new Member();
       newMember.setNo(oldMember.getNo());
       newMember.setName(
@@ -48,21 +42,14 @@ public class MemberUpdateCommand implements Command {
       newMember.setRegisterDate(new Date(System.currentTimeMillis()));
 
       if (oldMember.equals(newMember)) {
-        System.out.println("멤버 정보이 취소되었습니다.");
+        System.out.println("회원 정보 변경을 취소되었습니다.");
         return;
       }
-      out.writeUTF("/member/update");
-      out.writeObject(newMember);
-      out.flush();
-
-      response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-      System.out.println("멤버 정보가 변경되었습니다.");
+      
+      memberDao.update(newMember);
+      System.out.println("회원 정보가 변경되었습니다.");
     } catch (Exception e) {
-      System.out.println("명령 실행 중 오류 발생!");
+      System.out.println("회원 정보 변경 실패!");
     }
   }
 }

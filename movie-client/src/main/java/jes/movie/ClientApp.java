@@ -10,6 +10,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
+import jes.movie.dao.proxy.InfoDaoProxy;
+import jes.movie.dao.proxy.MemberDaoProxy;
+import jes.movie.dao.proxy.ReviewDaoProxy;
 import jes.movie.handler.Command;
 import jes.movie.handler.InfoAddCommand;
 import jes.movie.handler.InfoDeleteCommand;
@@ -29,7 +32,6 @@ import jes.movie.handler.ReviewUpdateCommand;
 import jes.movie.util.Prompt;
 
 public class ClientApp {
-  // 키보드 스캐너 준비
   Scanner keyboard = new Scanner(System.in);
   Prompt prompt = new Prompt(keyboard);
 
@@ -66,25 +68,29 @@ public class ClientApp {
     Deque<String> commandStack = new ArrayDeque<>();
     Queue<String> commandQueue = new LinkedList<>();
 
+    InfoDaoProxy infoDao = new InfoDaoProxy(in, out);
+    MemberDaoProxy memberDao = new MemberDaoProxy(in, out);
+    ReviewDaoProxy reviewDao = new ReviewDaoProxy(in, out);
+    
     HashMap<String, Command> commandMap = new HashMap<>();
-    commandMap.put("/review/list", new ReviewListCommand(out, in));
-    commandMap.put("/review/add", new ReviewAddCommand(out, in, prompt));
-    commandMap.put("/review/detail", new ReviewDetailCommand(out, in, prompt));
-    commandMap.put("/review/delete", new ReviewDeleteCommand(out, in, prompt));
-    commandMap.put("/review/update", new ReviewUpdateCommand(out, in, prompt));
 
-    commandMap.put("/info/list", new InfoListCommand(out, in));
-    commandMap.put("/info/add", new InfoAddCommand(out, in, prompt));
-    commandMap.put("/info/delete", new InfoDeleteCommand(out, in, prompt));
-    commandMap.put("/info/detail", new InfoDetailCommand(out, in, prompt));
-    commandMap.put("/info/update", new InfoUpdateCommand(out, in, prompt));
+    commandMap.put("/info/list", new InfoListCommand(infoDao));
+    commandMap.put("/info/add", new InfoAddCommand(infoDao, prompt));
+    commandMap.put("/info/delete", new InfoDeleteCommand(infoDao, prompt));
+    commandMap.put("/info/detail", new InfoDetailCommand(infoDao, prompt));
+    commandMap.put("/info/update", new InfoUpdateCommand(infoDao, prompt));
 
-    commandMap.put("/member/add", new MemberAddCommand(out, in, prompt));
-    commandMap.put("/member/delete", new MemberDeleteCommand(out, in, prompt));
-    commandMap.put("/member/detail", new MemberDetailCommand(out, in, prompt));
-    commandMap.put("/member/list", new MemberListCommand(out, in));
-    commandMap.put("/member/update", new MemberUpdateCommand(out, in, prompt));
+    commandMap.put("/member/list", new MemberListCommand(memberDao));
+    commandMap.put("/member/add", new MemberAddCommand(memberDao, prompt));
+    commandMap.put("/member/delete", new MemberDeleteCommand(memberDao, prompt));
+    commandMap.put("/member/detail", new MemberDetailCommand(memberDao, prompt));
+    commandMap.put("/member/update", new MemberUpdateCommand(memberDao, prompt));
 
+    commandMap.put("/review/list", new ReviewListCommand(reviewDao));
+    commandMap.put("/review/add", new ReviewAddCommand(reviewDao, prompt));
+    commandMap.put("/review/detail", new ReviewDetailCommand(reviewDao, prompt));
+    commandMap.put("/review/delete", new ReviewDeleteCommand(reviewDao, prompt));
+    commandMap.put("/review/update", new ReviewUpdateCommand(reviewDao, prompt));
     try {
       while (true) {
         String command;
