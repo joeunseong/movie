@@ -1,14 +1,14 @@
-package jes.movie.sevlet;
+package jes.movie.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import jes.movie.dao.json.InfoJsonFileDao;
+import jes.movie.dao.InfoDao;
 
 public class InfoListServlet implements Servlet {
 
-  InfoJsonFileDao infoDao;
+  InfoDao infoDao;
   
-  public InfoListServlet(InfoJsonFileDao infoDao) {
+  public InfoListServlet(InfoDao infoDao) {
     this.infoDao = infoDao;
   }
 

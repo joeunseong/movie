@@ -1,23 +1,15 @@
 package jes.movie.dao;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import jes.movie.domain.Review;
 
-public class ReviewObjectFileDao extends AbstractObjectFileDao<Review>{
+public class ReviewObjectFileDao extends AbstractObjectFileDao<Review> implements ReviewDao {
   
   public ReviewObjectFileDao(String filename) {
     super(filename);
   }
   
+  @Override
   public int insert(Review review) throws Exception {
     if (indexOf(review.getNo()) > -1) { 
       return 0;
@@ -27,10 +19,12 @@ public class ReviewObjectFileDao extends AbstractObjectFileDao<Review>{
     return 1;
   }
 
+  @Override
   public List<Review> findAll() throws Exception {
     return list;
   }
 
+  @Override
   public Review findByNo(int no) throws Exception {
     int index = indexOf(no);
     if (index == -1) {
@@ -39,6 +33,7 @@ public class ReviewObjectFileDao extends AbstractObjectFileDao<Review>{
     return list.get(index);
   }
 
+  @Override
   public int update(Review review) throws Exception {
     int index = indexOf(review.getNo());
     if (index == -1) {
@@ -50,6 +45,7 @@ public class ReviewObjectFileDao extends AbstractObjectFileDao<Review>{
     return 1;
   }
 
+  @Override
   public int delete(int no) throws Exception {
     int index = indexOf(no);
     if (index == -1) {

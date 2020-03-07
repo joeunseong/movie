@@ -1,14 +1,14 @@
-package jes.movie.sevlet;
+package jes.movie.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import jes.movie.dao.json.MemberJsonFileDao;
+import jes.movie.dao.MemberDao;
 
 public class MemberDeleteServlet implements Servlet {
 
-  MemberJsonFileDao memberDao;
+  MemberDao memberDao;
 
-  public MemberDeleteServlet(MemberJsonFileDao memberDao) {
+  public MemberDeleteServlet(MemberDao memberDao) {
     this.memberDao = memberDao;
   }
 

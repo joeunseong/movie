@@ -1,28 +1,25 @@
-package jes.movie.sevlet;
+package jes.movie.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import jes.movie.dao.json.MemberJsonFileDao;
+import jes.movie.dao.MemberDao;
 import jes.movie.domain.Member;
 
-public class MemberDetailServlet implements Servlet {
+public class MemberUpdateServlet implements Servlet {
 
-  MemberJsonFileDao memberDao;
+  MemberDao memberDao;
 
-  public MemberDetailServlet(MemberJsonFileDao memberDao) {
+  public MemberUpdateServlet(MemberDao memberDao) {
     this.memberDao = memberDao;
   }
 
   @Override
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
-    int no = in.readInt();
+    Member member = (Member) in.readObject();
 
-    Member member = memberDao.findByNo(no);
-
-    if (member != null) {
+    if (memberDao.update(member) > 0) {
       out.writeUTF("OK");
-      out.writeObject(member);
-
+      
     } else {
       out.writeUTF("FAIL");
       out.writeUTF("해당 번호의 회원이 없습니다.");

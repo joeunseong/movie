@@ -1,13 +1,16 @@
 package jes.movie.dao.json;
 
 import java.util.List;
+import jes.movie.dao.MemberDao;
 import jes.movie.domain.Member;
 
-public class MemberJsonFileDao extends AbstractJsonFileDao<Member>{
+public class MemberJsonFileDao extends AbstractJsonFileDao<Member> implements MemberDao {
   
-public MemberJsonFileDao(String filename) {
-  super(filename);
-}
+  public MemberJsonFileDao(String filename) {
+    super(filename);
+  }
+  
+  @Override
   public int insert(Member member) throws Exception {
     if (indexOf(member.getNo()) > -1) {
       return 0;
@@ -17,10 +20,12 @@ public MemberJsonFileDao(String filename) {
     return 1;
   }
 
+  @Override
   public List<Member> findAll() throws Exception {
     return list;
   }
 
+  @Override
   public Member findByNo(int no) throws Exception {
     int index = indexOf(no);
     if (indexOf(index) == -1) {
@@ -29,6 +34,7 @@ public MemberJsonFileDao(String filename) {
     return list.get(index);
   }
 
+  @Override
   public int update(Member member) throws Exception {
     int index = indexOf(member.getNo());
     if (index == -1) {
@@ -39,6 +45,7 @@ public MemberJsonFileDao(String filename) {
     return 1;
   }
 
+  @Override
   public int delete(int no) throws Exception {
     int index = indexOf(no);
 

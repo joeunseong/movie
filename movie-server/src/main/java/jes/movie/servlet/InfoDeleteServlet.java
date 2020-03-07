@@ -1,25 +1,24 @@
-package jes.movie.sevlet;
+package jes.movie.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import jes.movie.dao.json.InfoJsonFileDao;
-import jes.movie.domain.Info;
+import jes.movie.dao.InfoDao;
 
-public class InfoUpdateServlet implements Servlet {
+public class InfoDeleteServlet implements Servlet {
 
-  InfoJsonFileDao infoDao;
+  InfoDao infoDao;
 
-  public InfoUpdateServlet(InfoJsonFileDao infoDao) {
+  public InfoDeleteServlet(InfoDao infoDao) {
     this.infoDao = infoDao;
   }
 
   @Override
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
-    Info info = (Info) in.readObject();
+    int no = in.readInt();
 
-    if (infoDao.update(info) > 0) {
+    if (infoDao.delete(no) > 0) {
       out.writeUTF("OK");
-      
+
     } else {
       out.writeUTF("FAIL");
       out.writeUTF("해당 번호의 영화 정보가 없습니다.");

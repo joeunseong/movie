@@ -1,4 +1,4 @@
-package jes.movie.sevlet;
+package jes.movie.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

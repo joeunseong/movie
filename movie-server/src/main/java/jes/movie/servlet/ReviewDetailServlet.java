@@ -1,14 +1,15 @@
-package jes.movie.sevlet;
+package jes.movie.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import jes.movie.dao.json.ReviewJsonFileDao;
+import jes.movie.dao.ReviewDao;
+import jes.movie.domain.Review;
 
-public class ReviewDeleteServlet implements Servlet {
+public class ReviewDetailServlet implements Servlet {
 
-  ReviewJsonFileDao reviewDao;
+  ReviewDao reviewDao;
 
-  public ReviewDeleteServlet(ReviewJsonFileDao reviewDao) {
+  public ReviewDetailServlet(ReviewDao reviewDao) {
     this.reviewDao = reviewDao;
   }
 
@@ -16,8 +17,11 @@ public class ReviewDeleteServlet implements Servlet {
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
     int no = in.readInt();
 
-    if (reviewDao.delete(no) > 0) {
+    Review review = reviewDao.findByNo(no);
+
+    if (review != null) {
       out.writeUTF("OK");
+      out.writeObject(review);
 
     } else {
       out.writeUTF("FAIL");

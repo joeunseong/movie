@@ -1,35 +1,31 @@
 package jes.movie.dao;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import jes.movie.domain.Member;
 
-public class MemberObjectFileDao extends AbstractObjectFileDao<Member>{
+public class MemberObjectFileDao extends AbstractObjectFileDao<Member> implements MemberDao {
   
-public MemberObjectFileDao(String filename) {
-  super(filename);
-}
+  public MemberObjectFileDao(String filename) {
+    super(filename);
+  }
+
+  @Override
   public int insert(Member member) throws Exception {
     if (indexOf(member.getNo()) > -1) {
       return 0;
     }
+    
     list.add(member); 
     saveData();
     return 1;
   }
 
+  @Override
   public List<Member> findAll() throws Exception {
     return list;
   }
 
+  @Override
   public Member findByNo(int no) throws Exception {
     int index = indexOf(no);
     if (indexOf(index) == -1) {
@@ -38,6 +34,7 @@ public MemberObjectFileDao(String filename) {
     return list.get(index);
   }
 
+  @Override
   public int update(Member member) throws Exception {
     int index = indexOf(member.getNo());
     if (index == -1) {
@@ -48,6 +45,7 @@ public MemberObjectFileDao(String filename) {
     return 1;
   }
 
+  @Override
   public int delete(int no) throws Exception {
     int index = indexOf(no);
 

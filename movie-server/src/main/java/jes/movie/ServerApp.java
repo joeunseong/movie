@@ -10,25 +10,25 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import jes.movie.context.ApplicationContextListener;
-import jes.movie.dao.json.InfoJsonFileDao;
-import jes.movie.dao.json.MemberJsonFileDao;
-import jes.movie.dao.json.ReviewJsonFileDao;
-import jes.movie.sevlet.InfoAddServlet;
-import jes.movie.sevlet.InfoDeleteServlet;
-import jes.movie.sevlet.InfoDetailServlet;
-import jes.movie.sevlet.InfoListServlet;
-import jes.movie.sevlet.InfoUpdateServlet;
-import jes.movie.sevlet.MemberAddServlet;
-import jes.movie.sevlet.MemberDeleteServlet;
-import jes.movie.sevlet.MemberDetailServlet;
-import jes.movie.sevlet.MemberListServlet;
-import jes.movie.sevlet.MemberUpdateServlet;
-import jes.movie.sevlet.ReviewAddServlet;
-import jes.movie.sevlet.ReviewDeleteServlet;
-import jes.movie.sevlet.ReviewDetailServlet;
-import jes.movie.sevlet.ReviewListServlet;
-import jes.movie.sevlet.ReviewUpdateServlet;
-import jes.movie.sevlet.Servlet;
+import jes.movie.dao.InfoDao;
+import jes.movie.dao.MemberDao;
+import jes.movie.dao.ReviewDao;
+import jes.movie.servlet.InfoAddServlet;
+import jes.movie.servlet.InfoDeleteServlet;
+import jes.movie.servlet.InfoDetailServlet;
+import jes.movie.servlet.InfoListServlet;
+import jes.movie.servlet.InfoUpdateServlet;
+import jes.movie.servlet.MemberAddServlet;
+import jes.movie.servlet.MemberDeleteServlet;
+import jes.movie.servlet.MemberDetailServlet;
+import jes.movie.servlet.MemberListServlet;
+import jes.movie.servlet.MemberUpdateServlet;
+import jes.movie.servlet.ReviewAddServlet;
+import jes.movie.servlet.ReviewDeleteServlet;
+import jes.movie.servlet.ReviewDetailServlet;
+import jes.movie.servlet.ReviewListServlet;
+import jes.movie.servlet.ReviewUpdateServlet;
+import jes.movie.servlet.Servlet;
 
 public class ServerApp {
 
@@ -59,9 +59,9 @@ public class ServerApp {
   public void service() {
     notifyApplicationInitailized();
     
-    InfoJsonFileDao infoDao = (InfoJsonFileDao) context.get("infoDao");
-    MemberJsonFileDao memberDao = (MemberJsonFileDao) context.get("memberDao");
-    ReviewJsonFileDao reviewDao = (ReviewJsonFileDao) context.get("reviewDao");
+    InfoDao infoDao = (InfoDao) context.get("infoDao");
+    MemberDao memberDao = (MemberDao) context.get("memberDao");
+    ReviewDao reviewDao = (ReviewDao) context.get("reviewDao");
 
     servletMap.put("/info/list", new InfoListServlet(infoDao));
     servletMap.put("/info/detail", new InfoDetailServlet(infoDao));
