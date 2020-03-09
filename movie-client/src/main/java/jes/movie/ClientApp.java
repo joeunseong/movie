@@ -34,19 +34,16 @@ import jes.movie.util.Prompt;
 public class ClientApp {
   Scanner keyboard = new Scanner(System.in);
   Prompt prompt = new Prompt(keyboard);
-  
+
   Deque<String> commandStack;
   Queue<String> commandQueue;
-  
+
   String host;
   int port;
-  
-  public ClientApp() {
-    commandStack = new ArrayDeque<>();
-    commandQueue = new LinkedList<>();
-  }
 
-  public void service() {
+  HashMap<String, Command> commandMap = new HashMap<>();
+
+  public ClientApp() {
     try {
       host = prompt.inputString("서버? ");
       port = prompt.inputInt("포토? ");
@@ -56,45 +53,13 @@ public class ClientApp {
       keyboard.close();
       return;
     }
-    
-    while (true) {
-      String command;
-      command = prompt.inputString("\n명령> ");
+    commandStack = new ArrayDeque<>();
+    commandQueue = new LinkedList<>();
 
-      if (command.length() == 0) {
-        continue;
-      }
+    InfoDaoProxy infoDao = new InfoDaoProxy(host, port);
+    MemberDaoProxy memberDao = new MemberDaoProxy(host, port);
+    ReviewDaoProxy reviewDao = new ReviewDaoProxy(host, port);
 
-      if (command.equals("history")) {
-        printCommandHistory(commandStack.iterator());
-        continue;
-      } else if (command.equals("history2")) {
-        printCommandHistory(commandQueue.iterator());
-        continue;
-      } else if(command.equals("quit")) {
-        break;
-      }
-
-
-      commandStack.push(command);
-      commandQueue.offer(command);
-      
-      processCommand(command);
-    }
-    keyboard.close();
-  }
-
-  private void processCommand(String command) {
-    try(Socket socket = new Socket(host, port);
-        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-        ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
-      System.out.println("서버와 연결을 되었음!");
-      
-    InfoDaoProxy infoDao = new InfoDaoProxy(in, out);
-    MemberDaoProxy memberDao = new MemberDaoProxy(in, out);
-    ReviewDaoProxy reviewDao = new ReviewDaoProxy(in, out);
-    
-    HashMap<String, Command> commandMap = new HashMap<>();
 
     commandMap.put("/info/list", new InfoListCommand(infoDao));
     commandMap.put("/info/add", new InfoAddCommand(infoDao, prompt));
@@ -113,38 +78,66 @@ public class ClientApp {
     commandMap.put("/review/detail", new ReviewDetailCommand(reviewDao, prompt));
     commandMap.put("/review/delete", new ReviewDeleteCommand(reviewDao, prompt));
     commandMap.put("/review/update", new ReviewUpdateCommand(reviewDao, prompt));
-    
+
     commandMap.put("/server/stop", () -> {
-    try {
-      out.writeUTF(command);
-      out.flush();
-      System.out.println("서버: " + in.readUTF());
-      System.out.println("안녕!");
-    }catch(Exception e) {
-      
+      try {
+        try (Socket socket = new Socket(host, port);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+
+          out.writeUTF("/server/stop");
+          out.flush();
+          System.out.println("서버: " + in.readUTF());
+          System.out.println("안녕!");
+        }
+      } catch (Exception e) {
+
       }
     });
-    
+  }
+
+  public void service() {
+    while (true) {
+      String command;
+      command = prompt.inputString("\n명령> ");
+
+      if (command.length() == 0) {
+        continue;
+      }
+
+      if (command.equals("history")) {
+        printCommandHistory(commandStack.iterator());
+        continue;
+      } else if (command.equals("history2")) {
+        printCommandHistory(commandQueue.iterator());
+        continue;
+      } else if (command.equals("quit")) {
+        break;
+      }
+
+      commandStack.push(command);
+      commandQueue.offer(command);
+
+      processCommand(command);
+    }
+    keyboard.close();
+  }
+
+  private void processCommand(String command) {
     Command commandHandler = commandMap.get(command);
-    
     if (commandHandler == null) {
       System.out.println("실행할 수 없는 명령입니다.");
       return;
     }
     commandHandler.execute();
-
-  } catch (Exception e) {
-    System.out.printf("명령어 실행 중 오류 발생: %s\n", e.getMessage());
-    e.printStackTrace();
   }
-  System.out.println("서버와 연결을 끊었음!");
-}
 
   public void printCommandHistory(Iterator<String> iterator) {
     int count = 0;
     while (iterator.hasNext()) {
       System.out.println(iterator.next());
       count++;
+
       if ((count % 5) == 0) {
         String str = prompt.inputString(":");
         if (str.equalsIgnoreCase("q")) {
