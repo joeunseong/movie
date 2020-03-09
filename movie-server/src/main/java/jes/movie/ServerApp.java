@@ -58,7 +58,7 @@ public class ServerApp {
 
   public void service() {
     notifyApplicationInitailized();
-    
+
     InfoDao infoDao = (InfoDao) context.get("infoDao");
     MemberDao memberDao = (MemberDao) context.get("memberDao");
     ReviewDao reviewDao = (ReviewDao) context.get("reviewDao");
@@ -89,10 +89,10 @@ public class ServerApp {
         Socket socket = serverSocket.accept();
         System.out.println("클라이언트와 연결되었음!");
 
-        if (processRequest(socket) == 9) {
-          break;
-        }
-        System.out.println("----------------------");
+        new Thread(() -> {
+          processRequest(socket);
+          System.out.println("-------------------------");
+        }).start();
       }
     } catch (Exception e) {
       System.out.println("서버 준비 중 오류 발생");
@@ -107,33 +107,33 @@ public class ServerApp {
         ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {
       System.out.println("통신을 위한 입출력 스트림을 준비하였음!");
 
-        String request = in.readUTF();
-        System.out.println("클라이언트가 보낸 메시지를 수신하였음!");
+      String request = in.readUTF();
+      System.out.println("클라이언트가 보낸 메시지를 수신하였음!");
 
-        if(request.equalsIgnoreCase("/server/stop")) {
-          quit(out);
-          return 9;
+      if (request.equalsIgnoreCase("/server/stop")) {
+        quit(out);
+        return 9;
+      }
+
+      Servlet servlet = servletMap.get(request);
+      if (servlet != null) {
+        try {
+          servlet.service(in, out);
+
+        } catch (Exception e) {
+          out.writeUTF("FAIL");
+          out.writeUTF(e.getMessage());
+
+          System.out.println("클라이언트 요청 처리 중 오류 발생:");
+          e.printStackTrace();
         }
+      } else {
+        notFound(out);
+      }
 
-        Servlet servlet = servletMap.get(request);
-        if (servlet != null) {
-          try {
-            servlet.service(in, out);
-            
-          } catch (Exception e) {
-            out.writeUTF("FAIL");
-            out.writeUTF(e.getMessage());
-
-            System.out.println("클라이언트 요청 처리 중 오류 발생:");
-            e.printStackTrace();
-          }
-        } else {
-          notFound(out);
-        }
-        
-        out.flush();
-        System.out.println("클라이언트에게 응답하였음!");
-        return 0;
+      out.flush();
+      System.out.println("클라이언트에게 응답하였음!");
+      return 0;
 
     } catch (Exception e) {
       System.out.println("예외 발생:");
