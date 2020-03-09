@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
+import jes.movie.dao.proxy.DaoProxyHelper;
 import jes.movie.dao.proxy.InfoDaoProxy;
 import jes.movie.dao.proxy.MemberDaoProxy;
 import jes.movie.dao.proxy.ReviewDaoProxy;
@@ -56,9 +57,11 @@ public class ClientApp {
     commandStack = new ArrayDeque<>();
     commandQueue = new LinkedList<>();
 
-    InfoDaoProxy infoDao = new InfoDaoProxy(host, port);
-    MemberDaoProxy memberDao = new MemberDaoProxy(host, port);
-    ReviewDaoProxy reviewDao = new ReviewDaoProxy(host, port);
+    DaoProxyHelper daoProxyHelper = new DaoProxyHelper(host, port);
+
+    InfoDaoProxy infoDao = new InfoDaoProxy(daoProxyHelper);
+    MemberDaoProxy memberDao = new MemberDaoProxy(daoProxyHelper);
+    ReviewDaoProxy reviewDao = new ReviewDaoProxy(daoProxyHelper);
 
 
     commandMap.put("/info/list", new InfoListCommand(infoDao));
