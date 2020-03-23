@@ -39,6 +39,7 @@ public class ClientApp {
   Deque<String> commandStack;
   Queue<String> commandQueue;
 
+
   String host;
   int port;
 
@@ -62,7 +63,6 @@ public class ClientApp {
     InfoDaoProxy infoDao = new InfoDaoProxy(daoProxyHelper);
     MemberDaoProxy memberDao = new MemberDaoProxy(daoProxyHelper);
     ReviewDaoProxy reviewDao = new ReviewDaoProxy(daoProxyHelper);
-
 
     commandMap.put("/info/list", new InfoListCommand(infoDao));
     commandMap.put("/info/add", new InfoAddCommand(infoDao, prompt));
