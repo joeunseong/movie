@@ -18,7 +18,6 @@ public class InfoAddCommand implements Command {
   public void execute() {
     Info info = new Info();
     
-    info.setNo(prompt.inputInt("번호? "));
     info.setMovieTitle(prompt.inputString("영화명? "));
     info.setGenre(prompt.inputString("장르? "));
     info.setSummary(prompt.inputString("줄거리? "));

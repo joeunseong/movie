@@ -17,9 +17,16 @@ public class InfoListCommand implements Command {
     try {
       List<Info> infos = infoDao.findAll();
       for (Info in : infos) {
-        System.out.printf("%d, %s, %s, %s, %s, %s, %s, %s, %d분\n", in.getNo(), in.getMovieTitle(),
-            in.getGenre(), in.getSummary(), in.getDirector(), in.getActor(), in.getKmrb(),
-            in.getOpenDate(), in.getRunningTime());
+        System.out.printf("%d, %s, %s, %s, %s, %s, %s, %s, %d분\n",
+            in.getNo(), 
+            in.getMovieTitle(),
+            in.getGenre(), 
+            in.getSummary(), 
+            in.getDirector(), 
+            in.getActor(), 
+            in.getKmrb(),
+            in.getOpenDate(), 
+            in.getRunningTime());
       }
 
     } catch (Exception e) {

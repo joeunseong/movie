@@ -2,16 +2,16 @@ package jes.movie.dao.mariadb;
 
 import java.sql.Connection;
 
+
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import jes.movie.dao.MemberDao;
-import jes.movie.domain.Member;
+import jes.movie.dao.ReviewDao;
 import jes.movie.domain.Review;
 
-public class ReviewDaoImpl implements MemberDao {
+public class ReviewDaoImpl implements ReviewDao {
 
   @Override
   public int insert(Review review) throws Exception {
@@ -30,7 +30,7 @@ public class ReviewDaoImpl implements MemberDao {
   }
 
   @Override
-  public List<Member> findAll() throws Exception {
+  public List<Review> findAll() throws Exception {
     Class.forName("org.mariadb.jdbc.Driver");
 
     try (
@@ -40,27 +40,25 @@ public class ReviewDaoImpl implements MemberDao {
         Statement stmt = con.createStatement();
 
         ResultSet rs = stmt.executeQuery(
-            "select member_id, name, email, pwd, cdt, photo, tel from movie_member")) {
+            "select review_id, mv_titl, conts, cdt, vw_cnt from movie_review")) {
 
-      ArrayList<Member> list = new ArrayList<>();
+      ArrayList<Review> list = new ArrayList<>();
 
       while (rs.next()) {
-        Member member = new Member();
-        member.setNo(rs.getInt("member_id"));
-        member.setName(rs.getString("name"));
-        member.setEmail(rs.getString("email"));
-        member.setPassword(rs.getString("pwd"));
-        member.setRegisterDate(rs.getDate("cdt"));
-        member.setPhoto(rs.getString("photo"));
-        member.setTel(rs.getString("tel"));
-        list.add(member);
+        Review review = new Review();
+        review.setNo(rs.getInt("review_id"));
+        review.setMovieTitle(rs.getString("mv_titl"));
+        review.setReviewSummary(rs.getString("conts"));
+        review.setUpdateDay(rs.getDate("cdt"));
+        review.setViewCount(rs.getInt("vw_cnt"));
+        list.add(review);
       }
       return list;
     }
   }
 
   @Override
-  public Member findByNo(int no) throws Exception {
+  public Review findByNo(int no) throws Exception {
     Class.forName("org.mariadb.jdbc.Driver");
 
     try (Connection con = DriverManager.getConnection(//
@@ -69,18 +67,16 @@ public class ReviewDaoImpl implements MemberDao {
         Statement stmt = con.createStatement();
 
         ResultSet rs = stmt.executeQuery(
-            "select * from movie_member where member_id=" + no)) {
+            "select * from movie_review where review_id=" + no)) {
 
       if (rs.next()) {
-        Member member = new Member();
-        member.setNo(rs.getInt("member_id"));
-        member.setName(rs.getString("name"));
-        member.setEmail(rs.getString("email"));
-        member.setPassword(rs.getString("pwd"));
-        member.setRegisterDate(rs.getDate("cdt"));
-        member.setTel(rs.getString("tel"));
-        member.setPhoto(rs.getString("photo"));
-        return member;
+        Review review = new Review();
+        review.setNo(rs.getInt("review_id"));
+        review.setMovieTitle(rs.getString("mv_title"));
+        review.setReviewSummary(rs.getString("conts"));
+        review.setUpdateDay(rs.getDate("cdt"));
+        review.setViewCount(rs.getInt("vw_cnt"));
+        return review;
       } else {
         return null;
       }
@@ -89,15 +85,14 @@ public class ReviewDaoImpl implements MemberDao {
   }
 
   @Override
-  public int update(Member member) throws Exception {
+  public int update(Review review) throws Exception {
     Class.forName("org.mariadb.jdbc.Driver");
     try (Connection con = DriverManager.getConnection(//
         "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
         Statement stmt = con.createStatement()) {
       int result =
-          stmt.executeUpdate("update movie_member set name= '" + member.getName() + "', email='"
-              + member.getEmail() + "', pwd='" + member.getPassword() + "', tel='" + member.getTel()
-              + "', photo='" + member.getPhoto() + "' where member_id=" + member.getNo());
+          stmt.executeUpdate("update movie_review set mv_title= '" + review.getMovieTitle() + "', "
+              + "conts='"+ review.getReviewSummary() + "' where reviewr_id=" + review.getNo());
 
       return result;
     }
@@ -110,7 +105,7 @@ public class ReviewDaoImpl implements MemberDao {
         "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
         Statement stmt = con.createStatement()) {
 
-      int result = stmt.executeUpdate("delete from movie_member where member_id=" + no);
+      int result = stmt.executeUpdate("delete from movie_review where review_id=" + no);
       return result;
     }
   }

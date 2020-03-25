@@ -10,7 +10,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
-import jes.movie.dao.proxy.DaoProxyHelper;
+import jes.movie.dao.InfoDao;
+import jes.movie.dao.MemberDao;
+import jes.movie.dao.ReviewDao;
+import jes.movie.dao.mariadb.InfoDaoImpl;
+import jes.movie.dao.mariadb.MemberDaoImpl;
+import jes.movie.dao.mariadb.ReviewDaoImpl;
 import jes.movie.dao.proxy.InfoDaoProxy;
 import jes.movie.dao.proxy.MemberDaoProxy;
 import jes.movie.dao.proxy.ReviewDaoProxy;
@@ -46,24 +51,13 @@ public class ClientApp {
   HashMap<String, Command> commandMap = new HashMap<>();
 
   public ClientApp() {
-    try {
-      host = prompt.inputString("서버? ");
-      port = prompt.inputInt("포토? ");
-
-    } catch (Exception e) {
-      System.out.println("서버 주소 또는 포트 번호가 유효하지 않습니다.");
-      keyboard.close();
-      return;
-    }
     commandStack = new ArrayDeque<>();
     commandQueue = new LinkedList<>();
 
-    DaoProxyHelper daoProxyHelper = new DaoProxyHelper(host, port);
-
-    InfoDaoProxy infoDao = new InfoDaoProxy(daoProxyHelper);
-    MemberDaoProxy memberDao = new MemberDaoProxy(daoProxyHelper);
-    ReviewDaoProxy reviewDao = new ReviewDaoProxy(daoProxyHelper);
-
+    InfoDao infoDao = new InfoDaoImpl();
+    MemberDao memberDao = new MemberDaoImpl();
+    ReviewDao reviewDao = new ReviewDaoImpl();
+    
     commandMap.put("/info/list", new InfoListCommand(infoDao));
     commandMap.put("/info/add", new InfoAddCommand(infoDao, prompt));
     commandMap.put("/info/delete", new InfoDeleteCommand(infoDao, prompt));

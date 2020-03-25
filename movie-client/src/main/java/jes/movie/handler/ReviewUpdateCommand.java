@@ -37,9 +37,6 @@ public class ReviewUpdateCommand implements Command {
 
       newReview.setReviewSummary(prompt.inputString("리뷰 내용? ", oldReview.getReviewSummary()));
 
-      newReview.setUpdateDay(new Date(System.currentTimeMillis()));
-      newReview.setViewCount(0);
-
       if (oldReview.equals(newReview)) {
         System.out.println("리뷰가 변경을 취소되었습니다.");
         return;

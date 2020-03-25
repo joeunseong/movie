@@ -39,7 +39,6 @@ public class MemberUpdateCommand implements Command {
           oldMember.getPhoto()));
       newMember.setTel(
           prompt.inputString(String.format("전화(%s)? ", oldMember.getTel()), oldMember.getTel()));
-      newMember.setRegisterDate(new Date(System.currentTimeMillis()));
 
       if (oldMember.equals(newMember)) {
         System.out.println("회원 정보 변경을 취소되었습니다.");
