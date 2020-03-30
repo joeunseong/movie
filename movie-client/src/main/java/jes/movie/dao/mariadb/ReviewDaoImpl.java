@@ -1,7 +1,6 @@
 package jes.movie.dao.mariadb;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -10,15 +9,16 @@ import jes.movie.dao.ReviewDao;
 import jes.movie.domain.Review;
 
 public class ReviewDaoImpl implements ReviewDao {
+  Connection con;
+
+  public ReviewDaoImpl(Connection con) {
+    this.con = con;
+  }
 
   @Override
   public int insert(Review review) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
 
-    try (Connection con = DriverManager.getConnection(//
-        "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
-        Statement stmt = con.createStatement()) {
-
+    try (Statement stmt = con.createStatement()) {
       int result = stmt.executeUpdate("insert into movie_review(mv_titl, conts)" + "values('"
           + review.getMovieTitle() + "', '" + review.getReviewSummary() + "')");
 
@@ -28,14 +28,8 @@ public class ReviewDaoImpl implements ReviewDao {
 
   @Override
   public List<Review> findAll() throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
 
-    try (
-        Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
-
-        Statement stmt = con.createStatement();
-
+    try (Statement stmt = con.createStatement();
         ResultSet rs =
             stmt.executeQuery("select review_id, mv_titl, conts, cdt, vw_cnt from movie_review")) {
 
@@ -56,13 +50,8 @@ public class ReviewDaoImpl implements ReviewDao {
 
   @Override
   public Review findByNo(int no) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
 
-    try (Connection con = DriverManager.getConnection(//
-        "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
-
-        Statement stmt = con.createStatement();
-
+    try (Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select * from movie_review where review_id=" + no)) {
 
       if (rs.next()) {
@@ -82,10 +71,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
   @Override
   public int update(Review review) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
-    try (Connection con = DriverManager.getConnection(//
-        "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
-        Statement stmt = con.createStatement()) {
+    try (Statement stmt = con.createStatement()) {
       int result = stmt.executeUpdate("update movie_review set mv_titl= '" + review.getMovieTitle()
           + "', " + "conts='" + review.getReviewSummary() + "' where reviewr_id=" + review.getNo());
 
@@ -95,11 +81,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
   @Override
   public int delete(int no) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
-    try (
-        Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
-        Statement stmt = con.createStatement()) {
+    try (Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("delete from movie_review where review_id=" + no);
       return result;

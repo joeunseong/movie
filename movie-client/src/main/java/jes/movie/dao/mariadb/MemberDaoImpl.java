@@ -1,7 +1,6 @@
 package jes.movie.dao.mariadb;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -10,17 +9,19 @@ import jes.movie.dao.MemberDao;
 import jes.movie.domain.Member;
 
 public class MemberDaoImpl implements MemberDao {
+  Connection con;
+
+  public MemberDaoImpl(Connection con) {
+    this.con = con;
+  }
 
   @Override
   public int insert(Member member) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
 
-    try (Connection con = DriverManager.getConnection(//
-        "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
-        Statement stmt = con.createStatement()) {
+    try (Statement stmt = con.createStatement()) {
 
-      int result = stmt.executeUpdate(
-          "insert into movie_member(name, email, pwd, tel, photo)" + "values('"
+      int result =
+          stmt.executeUpdate("insert into movie_member(name, email, pwd, tel, photo)" + "values('"
               + member.getName() + "', '" + member.getEmail() + "','" + member.getPassword() + "',"
               + "'" + member.getTel() + "', '" + member.getPhoto() + "')");
 
@@ -30,13 +31,8 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public List<Member> findAll() throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
 
-    try (
-        Connection con = DriverManager.getConnection(
-            "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
-
-        Statement stmt = con.createStatement();
+    try (Statement stmt = con.createStatement();
 
         ResultSet rs = stmt.executeQuery(
             "select member_id, name, email, pwd, cdt, photo, tel from movie_member")) {
@@ -60,15 +56,10 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public Member findByNo(int no) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
 
-    try (Connection con = DriverManager.getConnection(//
-        "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
+    try (Statement stmt = con.createStatement();
 
-        Statement stmt = con.createStatement();
-
-        ResultSet rs = stmt.executeQuery(
-            "select * from movie_member where member_id=" + no)) {
+        ResultSet rs = stmt.executeQuery("select * from movie_member where member_id=" + no)) {
 
       if (rs.next()) {
         Member member = new Member();
@@ -89,10 +80,7 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public int update(Member member) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
-    try (Connection con = DriverManager.getConnection(//
-        "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
-        Statement stmt = con.createStatement()) {
+    try (Statement stmt = con.createStatement()) {
       int result =
           stmt.executeUpdate("update movie_member set name= '" + member.getName() + "', email='"
               + member.getEmail() + "', pwd='" + member.getPassword() + "', tel='" + member.getTel()
@@ -104,10 +92,7 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public int delete(int no) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
-    try (Connection con = DriverManager.getConnection(
-        "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
-        Statement stmt = con.createStatement()) {
+    try (Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("delete from movie_member where member_id=" + no);
       return result;

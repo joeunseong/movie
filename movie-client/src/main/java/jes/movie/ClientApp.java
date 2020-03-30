@@ -1,8 +1,7 @@
 package jes.movie;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
@@ -16,9 +15,6 @@ import jes.movie.dao.ReviewDao;
 import jes.movie.dao.mariadb.InfoDaoImpl;
 import jes.movie.dao.mariadb.MemberDaoImpl;
 import jes.movie.dao.mariadb.ReviewDaoImpl;
-import jes.movie.dao.proxy.InfoDaoProxy;
-import jes.movie.dao.proxy.MemberDaoProxy;
-import jes.movie.dao.proxy.ReviewDaoProxy;
 import jes.movie.handler.Command;
 import jes.movie.handler.InfoAddCommand;
 import jes.movie.handler.InfoDeleteCommand;
@@ -44,20 +40,21 @@ public class ClientApp {
   Deque<String> commandStack;
   Queue<String> commandQueue;
 
-
-  String host;
-  int port;
+  Connection con;
 
   HashMap<String, Command> commandMap = new HashMap<>();
 
-  public ClientApp() {
+  public ClientApp() throws Exception {
     commandStack = new ArrayDeque<>();
     commandQueue = new LinkedList<>();
 
-    InfoDao infoDao = new InfoDaoImpl();
-    MemberDao memberDao = new MemberDaoImpl();
-    ReviewDao reviewDao = new ReviewDaoImpl();
-    
+    Class.forName("org.mariadb.jdbc.Driver");
+    con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
+
+    InfoDao infoDao = new InfoDaoImpl(con);
+    MemberDao memberDao = new MemberDaoImpl(con);
+    ReviewDao reviewDao = new ReviewDaoImpl(con);
+
     commandMap.put("/info/list", new InfoListCommand(infoDao));
     commandMap.put("/info/add", new InfoAddCommand(infoDao, prompt));
     commandMap.put("/info/delete", new InfoDeleteCommand(infoDao, prompt));
@@ -76,21 +73,6 @@ public class ClientApp {
     commandMap.put("/review/delete", new ReviewDeleteCommand(reviewDao, prompt));
     commandMap.put("/review/update", new ReviewUpdateCommand(reviewDao, prompt));
 
-    commandMap.put("/server/stop", () -> {
-      try {
-        try (Socket socket = new Socket(host, port);
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
-
-          out.writeUTF("/server/stop");
-          out.flush();
-          System.out.println("서버: " + in.readUTF());
-          System.out.println("안녕!");
-        }
-      } catch (Exception e) {
-
-      }
-    });
   }
 
   public void service() {
@@ -118,6 +100,12 @@ public class ClientApp {
       processCommand(command);
     }
     keyboard.close();
+
+    try {
+      con.close();
+    } catch (Exception e) {
+
+    }
   }
 
   private void processCommand(String command) {
