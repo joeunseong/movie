@@ -1,8 +1,6 @@
 package jes.movie.dao.mariadb;
 
 import java.sql.Connection;
-
-
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -21,9 +19,8 @@ public class ReviewDaoImpl implements ReviewDao {
         "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
         Statement stmt = con.createStatement()) {
 
-      int result = stmt.executeUpdate(
-          "insert into movie_review(mv_titl, conts)" + 
-      "values('" + review.getMovieTitle()+"', '" + review.getReviewSummary() + "')");
+      int result = stmt.executeUpdate("insert into movie_review(mv_titl, conts)" + "values('"
+          + review.getMovieTitle() + "', '" + review.getReviewSummary() + "')");
 
       return result;
     }
@@ -34,13 +31,13 @@ public class ReviewDaoImpl implements ReviewDao {
     Class.forName("org.mariadb.jdbc.Driver");
 
     try (
-        Connection con = DriverManager.getConnection(
-            "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
+        Connection con =
+            DriverManager.getConnection("jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
 
         Statement stmt = con.createStatement();
 
-        ResultSet rs = stmt.executeQuery(
-            "select review_id, mv_titl, conts, cdt, vw_cnt from movie_review")) {
+        ResultSet rs =
+            stmt.executeQuery("select review_id, mv_titl, conts, cdt, vw_cnt from movie_review")) {
 
       ArrayList<Review> list = new ArrayList<>();
 
@@ -66,13 +63,12 @@ public class ReviewDaoImpl implements ReviewDao {
 
         Statement stmt = con.createStatement();
 
-        ResultSet rs = stmt.executeQuery(
-            "select * from movie_review where review_id=" + no)) {
+        ResultSet rs = stmt.executeQuery("select * from movie_review where review_id=" + no)) {
 
       if (rs.next()) {
         Review review = new Review();
         review.setNo(rs.getInt("review_id"));
-        review.setMovieTitle(rs.getString("mv_title"));
+        review.setMovieTitle(rs.getString("mv_titl"));
         review.setReviewSummary(rs.getString("conts"));
         review.setUpdateDay(rs.getDate("cdt"));
         review.setViewCount(rs.getInt("vw_cnt"));
@@ -90,9 +86,8 @@ public class ReviewDaoImpl implements ReviewDao {
     try (Connection con = DriverManager.getConnection(//
         "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
         Statement stmt = con.createStatement()) {
-      int result =
-          stmt.executeUpdate("update movie_review set mv_title= '" + review.getMovieTitle() + "', "
-              + "conts='"+ review.getReviewSummary() + "' where reviewr_id=" + review.getNo());
+      int result = stmt.executeUpdate("update movie_review set mv_titl= '" + review.getMovieTitle()
+          + "', " + "conts='" + review.getReviewSummary() + "' where reviewr_id=" + review.getNo());
 
       return result;
     }
@@ -101,8 +96,9 @@ public class ReviewDaoImpl implements ReviewDao {
   @Override
   public int delete(int no) throws Exception {
     Class.forName("org.mariadb.jdbc.Driver");
-    try (Connection con = DriverManager.getConnection(
-        "jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
+    try (
+        Connection con =
+            DriverManager.getConnection("jdbc:mariadb://localhost:3306/moviedb", "movie", "1111");
         Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("delete from movie_review where review_id=" + no);
