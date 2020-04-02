@@ -17,10 +17,10 @@ public class ReviewDaoImpl implements ReviewDao {
 
   @Override
   public int insert(Review review) throws Exception {
-
     try (Statement stmt = con.createStatement()) {
-      int result = stmt.executeUpdate("insert into movie_review(mv_titl, conts)" + "values('"
-          + review.getMovieTitle() + "', '" + review.getReviewSummary() + "')");
+      int result = stmt.executeUpdate(//
+          "insert into movie_review(mv_titl, conts)" + "values('" + review.getMovieTitle() + "', '"
+              + review.getReviewSummary() + "')");
 
       return result;
     }
@@ -28,7 +28,6 @@ public class ReviewDaoImpl implements ReviewDao {
 
   @Override
   public List<Review> findAll() throws Exception {
-
     try (Statement stmt = con.createStatement();
         ResultSet rs =
             stmt.executeQuery("select review_id, mv_titl, conts, cdt, vw_cnt from movie_review")) {
@@ -50,7 +49,6 @@ public class ReviewDaoImpl implements ReviewDao {
 
   @Override
   public Review findByNo(int no) throws Exception {
-
     try (Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select * from movie_review where review_id=" + no)) {
 
@@ -72,8 +70,9 @@ public class ReviewDaoImpl implements ReviewDao {
   @Override
   public int update(Review review) throws Exception {
     try (Statement stmt = con.createStatement()) {
-      int result = stmt.executeUpdate("update movie_review set mv_titl= '" + review.getMovieTitle()
-          + "', " + "conts='" + review.getReviewSummary() + "' where reviewr_id=" + review.getNo());
+      int result = stmt.executeUpdate(//
+          "update movie_review set mv_titl= '" + review.getMovieTitle() + "', " + "conts='"
+              + review.getReviewSummary() + "' where review_id=" + review.getNo());
 
       return result;
     }
@@ -82,7 +81,6 @@ public class ReviewDaoImpl implements ReviewDao {
   @Override
   public int delete(int no) throws Exception {
     try (Statement stmt = con.createStatement()) {
-
       int result = stmt.executeUpdate("delete from movie_review where review_id=" + no);
       return result;
     }

@@ -17,13 +17,11 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public int insert(Member member) throws Exception {
-
     try (Statement stmt = con.createStatement()) {
-
-      int result =
-          stmt.executeUpdate("insert into movie_member(name, email, pwd, tel, photo)" + "values('"
-              + member.getName() + "', '" + member.getEmail() + "','" + member.getPassword() + "',"
-              + "'" + member.getTel() + "', '" + member.getPhoto() + "')");
+      int result = stmt.executeUpdate(//
+          "insert into movie_member(name, email, pwd, tel, photo) values('" + member.getName()
+              + "', '" + member.getEmail() + "','" + member.getPassword() + "'," + "'"
+              + member.getTel() + "', '" + member.getPhoto() + "')");
 
       return result;
     }
@@ -31,9 +29,7 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public List<Member> findAll() throws Exception {
-
     try (Statement stmt = con.createStatement();
-
         ResultSet rs = stmt.executeQuery(
             "select member_id, name, email, pwd, cdt, photo, tel from movie_member")) {
 
@@ -56,9 +52,7 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public Member findByNo(int no) throws Exception {
-
     try (Statement stmt = con.createStatement();
-
         ResultSet rs = stmt.executeQuery("select * from movie_member where member_id=" + no)) {
 
       if (rs.next()) {
@@ -81,10 +75,10 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public int update(Member member) throws Exception {
     try (Statement stmt = con.createStatement()) {
-      int result =
-          stmt.executeUpdate("update movie_member set name= '" + member.getName() + "', email='"
-              + member.getEmail() + "', pwd='" + member.getPassword() + "', tel='" + member.getTel()
-              + "', photo='" + member.getPhoto() + "' where member_id=" + member.getNo());
+      int result = stmt.executeUpdate(//
+          "update movie_member set name= '" + member.getName() + "', email='" + member.getEmail()
+              + "', pwd='" + member.getPassword() + "', tel='" + member.getTel() + "', photo='"
+              + member.getPhoto() + "' where member_id=" + member.getNo());
 
       return result;
     }
@@ -93,7 +87,6 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public int delete(int no) throws Exception {
     try (Statement stmt = con.createStatement()) {
-
       int result = stmt.executeUpdate("delete from movie_member where member_id=" + no);
       return result;
     }

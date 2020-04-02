@@ -1,7 +1,7 @@
 package jes.movie.servlet;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.PrintStream;
+import java.util.Scanner;
 import jes.movie.dao.ReviewDao;
 import jes.movie.domain.Review;
 
@@ -14,15 +14,24 @@ public class ReviewAddServlet implements Servlet {
   }
 
   @Override
-  public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
-    Review review = (Review) in.readObject();
+  public void service(Scanner in, PrintStream out) throws Exception {
+    Review review = new Review();
+
+    out.println("영화 제목? ");
+    out.println("!{}!");
+    out.flush();
+    review.setMovieTitle(in.nextLine());
+
+    out.println("내용? ");
+    out.println("!{}!");
+    out.flush();
+    review.setReviewSummary(in.nextLine());
 
     if (reviewDao.insert(review) > 0) {
-      out.writeUTF("OK");
+      out.println("리뷰를 저장하였습니다.");
 
     } else {
-      out.writeUTF("FAIL");
-      out.writeUTF("같은 번호의 리뷰가 있습니다.");
+      out.println("리뷰 등록 실패했습니다.");
     }
   }
 }

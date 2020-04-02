@@ -18,8 +18,6 @@ public class InfoDaoImpl implements InfoDao {
 
   @Override
   public int insert(Info info) throws Exception {
-
-
     try (Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate(
@@ -92,7 +90,7 @@ public class InfoDaoImpl implements InfoDao {
           + "', gr='" + info.getGenre() + "', conts='" + info.getSummary() + "', dct='"
           + info.getDirector() + "', act='" + info.getActor() + "', sort='" + info.getKmrb() + "', "
           + "opn_day='" + info.getOpenDate() + "', rnt='" + info.getRunningTime() + "' "
-          + "where member_id=" + info.getNo());
+          + "where info_id=" + info.getNo());
 
       return result;
     }

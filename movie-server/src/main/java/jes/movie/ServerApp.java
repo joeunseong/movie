@@ -16,9 +16,21 @@ import jes.movie.context.ApplicationContextListener;
 import jes.movie.dao.InfoDao;
 import jes.movie.dao.MemberDao;
 import jes.movie.dao.ReviewDao;
+import jes.movie.servlet.InfoAddServlet;
+import jes.movie.servlet.InfoDeleteServlet;
+import jes.movie.servlet.InfoDetailServlet;
 import jes.movie.servlet.InfoListServlet;
+import jes.movie.servlet.InfoUpdateServlet;
+import jes.movie.servlet.MemberAddServlet;
+import jes.movie.servlet.MemberDeleteServlet;
+import jes.movie.servlet.MemberDetailServlet;
 import jes.movie.servlet.MemberListServlet;
+import jes.movie.servlet.MemberUpdateServlet;
+import jes.movie.servlet.ReviewAddServlet;
+import jes.movie.servlet.ReviewDeleteServlet;
+import jes.movie.servlet.ReviewDetailServlet;
 import jes.movie.servlet.ReviewListServlet;
+import jes.movie.servlet.ReviewUpdateServlet;
 import jes.movie.servlet.Servlet;
 
 public class ServerApp {
@@ -57,22 +69,22 @@ public class ServerApp {
     ReviewDao reviewDao = (ReviewDao) context.get("reviewDao");
 
     servletMap.put("/info/list", new InfoListServlet(infoDao));
-    // servletMap.put("/info/detail", new InfoDetailServlet(infoDao));
-    // servletMap.put("/info/add", new InfoAddServlet(infoDao));
-    // servletMap.put("/info/update", new InfoUpdateServlet(infoDao));
-    // servletMap.put("/info/delete", new InfoDeleteServlet(infoDao));
+    servletMap.put("/info/detail", new InfoDetailServlet(infoDao));
+    servletMap.put("/info/add", new InfoAddServlet(infoDao));
+    servletMap.put("/info/update", new InfoUpdateServlet(infoDao));
+    servletMap.put("/info/delete", new InfoDeleteServlet(infoDao));
 
     servletMap.put("/member/list", new MemberListServlet(memberDao));
-    // servletMap.put("/member/detail", new MemberDetailServlet(memberDao));
-    // servletMap.put("/member/add", new MemberAddServlet(memberDao));
-    // servletMap.put("/member/update", new MemberUpdateServlet(memberDao));
-    // servletMap.put("/member/delete", new MemberDeleteServlet(memberDao));
+    servletMap.put("/member/detail", new MemberDetailServlet(memberDao));
+    servletMap.put("/member/add", new MemberAddServlet(memberDao));
+    servletMap.put("/member/update", new MemberUpdateServlet(memberDao));
+    servletMap.put("/member/delete", new MemberDeleteServlet(memberDao));
 
     servletMap.put("/review/list", new ReviewListServlet(reviewDao));
-    // servletMap.put("/review/detail", new ReviewDetailServlet(reviewDao));
-    // servletMap.put("/review/add", new ReviewAddServlet(reviewDao));
-    // servletMap.put("/review/update", new ReviewUpdateServlet(reviewDao));
-    // servletMap.put("/review/delete", new ReviewDeleteServlet(reviewDao));
+    servletMap.put("/review/detail", new ReviewDetailServlet(reviewDao));
+    servletMap.put("/review/add", new ReviewAddServlet(reviewDao));
+    servletMap.put("/review/update", new ReviewUpdateServlet(reviewDao));
+    servletMap.put("/review/delete", new ReviewDeleteServlet(reviewDao));
 
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
