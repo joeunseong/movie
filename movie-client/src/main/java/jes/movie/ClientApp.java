@@ -60,11 +60,11 @@ public class ClientApp {
     String servletPath = null;
 
     try {
-      if (!command.startsWith("jes://")) {
+      if (!command.startsWith("movie://")) {
         throw new Exception("명령어 형식이 옳지 않습니다!");
       }
 
-      String url = command.substring(10);
+      String url = command.substring(8);
 
       int index = url.indexOf('/');
       String[] str = url.substring(0, index).split(":");
