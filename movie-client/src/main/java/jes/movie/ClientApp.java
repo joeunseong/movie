@@ -4,12 +4,10 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
-import jes.movie.handler.Command;
 import jes.movie.util.Prompt;
 
 public class ClientApp {
@@ -18,8 +16,6 @@ public class ClientApp {
 
   Deque<String> commandStack;
   Queue<String> commandQueue;
-
-  HashMap<String, Command> commandMap = new HashMap<>();
 
   public ClientApp() throws Exception {
     commandStack = new ArrayDeque<>();
@@ -68,13 +64,14 @@ public class ClientApp {
 
       int index = url.indexOf('/');
       String[] str = url.substring(0, index).split(":");
+
       host = str[0];
       if (str.length == 2) {
         port = Integer.parseInt(str[1]);
       }
 
       servletPath = url.substring(index);
-      System.out.printf("=> %s\n", servletPath);
+      // System.out.printf("=> %s\n", servletPath);
 
     } catch (Exception e) {
       System.out.println(e.getMessage());
@@ -92,8 +89,12 @@ public class ClientApp {
         String response = in.nextLine();
         if (response.equals("!end!")) {
           break;
+        } else if (response.equals("!{}!")) {
+          String input = prompt.inputString("");
+          out.println(input);
+        } else {
+          System.out.println(response);
         }
-        System.out.println(response);
       }
 
     } catch (Exception e) {
